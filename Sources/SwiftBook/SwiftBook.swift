@@ -20,16 +20,14 @@ public struct SwiftBook: View {
         if self.docs.count > 0 {
             HStack {
                 VStack {
-                    VStack{
-                        List(0..<titles.count) { index in
-                            Text(titles[index])
-                                .onTapGesture {
-                                    selectedIndex = index
-                                    components = (docs[index] as! SwiftBookDoc).stories
-                                }
-                                .padding(2)
-                                .foregroundColor(selectedIndex == index ? .blue : .white)
-                        }
+                    List(0..<titles.count) { index in
+                        Text(titles[index])
+                            .onTapGesture {
+                                selectedIndex = index
+                                components = (docs[index] as! SwiftBookDoc).stories
+                            }
+                            .padding(2)
+                            .foregroundColor(selectedIndex == index ? .blue : .white)
                     }
                 }
                 .frame(maxWidth: 200)
