@@ -36,9 +36,10 @@ public struct SwiftBook: View {
                         ForEach(0..<components.count, id: \.self) { index in
                             components[index]
                         }
-                    }.frame(minWidth: 1000, maxWidth: .infinity, maxHeight: .infinity)
+                    }.frame(minWidth: 800, maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
+            .frame(minWidth: 1100, minHeight: 700)
             .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
             .onAppear(perform: {
                 self.components = (docs[0] as! SwiftBookDoc).stories
