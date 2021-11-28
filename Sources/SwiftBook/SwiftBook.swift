@@ -2,27 +2,21 @@ import SwiftUI
 
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBook: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     let docs: [Any]
     let titles: [String]
-    @State var components: [AnyView]
+    @State var components: [AnyView] = []
     
-    public init?(docs: [Any]) {
+    public init(docs: [Any]) {
         self.docs = docs
         self.titles = docs.compactMap({doc in
             (doc as! SwiftBookDoc).title
         })
-        
-        if self.titles.count > 0 {
-            self.components = (docs[0] as! SwiftBookDoc).stories
-        } else {
-            self.components = []
-        }
-        
     }
     
     public var body: some View {
         if self.docs.count > 0 {
-            
             HStack {
                 VStack {
                     VStack{
@@ -31,10 +25,10 @@ public struct SwiftBook: View {
                                 .onTapGesture {
                                     components = (docs[index] as! SwiftBookDoc).stories
                                 }
+                                .padding(2)
                         }
                     }
                 }
-                .background(Color.red)
                 .frame(maxWidth: 200)
                 ScrollView {
                     VStack {
@@ -44,7 +38,10 @@ public struct SwiftBook: View {
                     }.frame(minWidth: 1000, maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
-            .background(Color(red: 0.1, green: 0.1, blue: 0.1))
+            .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
+            .onAppear(perform: {
+                self.components = (docs[0] as! SwiftBookDoc).stories
+            })
         }
     }
 }
