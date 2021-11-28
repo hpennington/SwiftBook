@@ -7,6 +7,7 @@ public struct SwiftBook: View {
     let docs: [Any]
     let titles: [String]
     @State var components: [AnyView] = []
+    @State var selectedIndex = 0
     
     public init(docs: [Any]) {
         self.docs = docs
@@ -23,9 +24,11 @@ public struct SwiftBook: View {
                         List(0..<titles.count) { index in
                             Text(titles[index])
                                 .onTapGesture {
+                                    selectedIndex = index
                                     components = (docs[index] as! SwiftBookDoc).stories
                                 }
                                 .padding(2)
+                                .foregroundColor(selectedIndex == index ? .blue : .white)
                         }
                     }
                 }
