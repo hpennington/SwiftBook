@@ -15,28 +15,36 @@ public struct SwiftBook: View {
         if self.titles.count > 0 {
             self.components = (docs[0] as! SwiftBookDoc).stories
         } else {
-            return nil
+            self.components = []
         }
         
     }
     
     public var body: some View {
-        ScrollView {
+        if self.docs.count > 0 {
+            
             HStack {
-                VStack{
-                    ForEach(0..<titles.count) { index in
-                        Text(titles[index])
-                            .onTapGesture {
-                                components = (docs[1] as! SwiftBookDoc).stories
-                            }
+                VStack {
+                    VStack{
+                        List(0..<titles.count) { index in
+                            Text(titles[index])
+                                .onTapGesture {
+                                    components = (docs[index] as! SwiftBookDoc).stories
+                                }
+                        }
                     }
                 }
-                VStack {
-                    ForEach(0..<components.count, id: \.self) { index in
-                        components[index]
-                    }
+                .background(Color.red)
+                .frame(maxWidth: 200)
+                ScrollView {
+                    VStack {
+                        ForEach(0..<components.count, id: \.self) { index in
+                            components[index]
+                        }
+                    }.frame(minWidth: 1000, maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
+            .background(Color(red: 0.1, green: 0.1, blue: 0.1))
         }
     }
 }
