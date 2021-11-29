@@ -42,9 +42,7 @@ public struct SwiftBook: View {
     
     public init(docs: [SwiftBookDoc]) {
         self.docs = docs
-        self.titles = docs.map({doc in
-            return doc.title
-        })
+        self.titles = docs.map { $0.title }
     }
     
     let padding: CGFloat = 15
