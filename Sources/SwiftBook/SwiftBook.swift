@@ -187,7 +187,9 @@ public struct SwiftBookArgRow: View {
             Text(title)
             Text(":")
             Text(type.rawValue)
+            Spacer()
             Text(description)
+            Spacer()
         }
     }
 }
