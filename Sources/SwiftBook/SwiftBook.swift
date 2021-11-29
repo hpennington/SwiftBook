@@ -1,3 +1,10 @@
+//
+//  SwiftBook
+//  SwiftBook.swift
+//
+//  Created by Hayden Pennington on 11/27/21.
+//
+
 import SwiftUI
 
 let windowMinWidth: CGFloat = 1100
