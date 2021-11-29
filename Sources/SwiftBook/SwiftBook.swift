@@ -15,17 +15,9 @@ let argsTableWidth: CGFloat = 400
 
 @available(iOS 13, macOS 10.15, *)
 extension Color {
-    static var offWhite: Color {
-        Color(red: 0.95, green: 0.95, blue: 0.95)
-    }
-    
-    static var offBlack: Color {
-        Color(red: 0.05, green: 0.05, blue: 0.05)
-    }
-    
-    static var darkBackground: Color {
-        Color(red: 0.1, green: 0.1, blue: 0.1)
-    }
+    static let offWhite = Color(red: 0.95, green: 0.95, blue: 0.95)
+    static let offBlack = Color(red: 0.05, green: 0.05, blue: 0.05)
+    static let darkBackground = Color(red: 0.1, green: 0.1, blue: 0.1)
 }
 
 /// SwiftBookDoc
