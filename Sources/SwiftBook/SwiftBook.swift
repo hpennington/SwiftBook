@@ -96,10 +96,13 @@ private struct SwiftBookCanvasInner: View {
                 }
             }
             
-            VStack {
+            VStack(alignment: .leading) {
+                Text("Arguments")
+                    .padding()
+                    .font(.headline)
                 ForEach(0..<argsTable.count, id: \.self) { argsIndex in
                     argsTable[argsIndex]
-                        .frame(width: 400)
+                        .frame(width: 400, alignment: .leading)
                         .padding()
                         .background(colorScheme == .dark ? Color(red: 0.05, green: 0.05, blue: 0.05) : .white)
                         .foregroundColor(Color.primary)
@@ -175,8 +178,9 @@ public struct SwiftBookArgRow: View {
     public var body: some View {
         HStack {
             Text(title)
-            Text(description)
+            Text(":")
             Text(type.rawValue)
+            Text(description)
         }
     }
 }
