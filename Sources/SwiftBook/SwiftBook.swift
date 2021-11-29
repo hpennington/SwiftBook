@@ -33,7 +33,7 @@ public struct SwiftBook: View {
                 }
                 .frame(maxWidth: 200)
                 VStack {
-                    SwiftBookCanvas(title: (self.docs[selectedIndex] as! SwiftBookDoc).title, components: $components, controls: (self.docs[selectedIndex] as! SwiftBookDoc).controls, argsTable: (self.docs[selectedIndex] as! SwiftBookDoc).argsTable, selectedIndex: selectedIndex)
+                    SwiftBookCanvas(title: (self.docs[selectedIndex] as! SwiftBookDoc).title, description: (self.docs[selectedIndex] as! SwiftBookDoc).description, components: $components, controls: (self.docs[selectedIndex] as! SwiftBookDoc).controls, argsTable: (self.docs[selectedIndex] as! SwiftBookDoc).argsTable, selectedIndex: selectedIndex)
                 }
             }
             .frame(minWidth: 1100, minHeight: 700)
@@ -48,6 +48,7 @@ public struct SwiftBook: View {
 @available(iOS 13, macOS 10.15, *)
 private struct SwiftBookCanvas: View {
     let title: String
+    let description: String
     @Binding var components: [AnyView]
     let controls: [[AnyView]]
     let argsTable: [SwiftBookArgRow]
@@ -57,7 +58,12 @@ private struct SwiftBookCanvas: View {
         ScrollView {
             VStack {
                 Text(title)
+                    .frame(maxWidth: 1000, alignment: .leading)
                     .font(.system(size: 44))
+                    .padding()
+                Text(description)
+                    .frame(maxWidth: 1000, alignment: .leading)
+                    .font(.system(size: 18))
                     .padding()
                 ForEach(0..<components.count, id: \.self) { index in
                     SwiftBookCanvasInner(components: $components, controls: controls, argsTable: argsTable, index: index)
@@ -108,6 +114,7 @@ private struct SwiftBookCanvasInner: View {
 @available(iOS 13, macOS 10.15, *)
 public protocol SwiftBookDoc {
     var title: String { get }
+    var description: String { get }
     var argsTable: [SwiftBookArgRow] { get }
     var controls: [[AnyView]] { get }
     var stories: [AnyView] { get }
@@ -199,6 +206,7 @@ public struct H1: View {
     public var body: some View {
         if let text = text {
             Text(text)
+                .frame(maxWidth: 1000, alignment: .leading)
                 .font(.system(size: HeaderSize.h1.rawValue))
                 .padding()
         }
@@ -216,6 +224,7 @@ public struct H2: View {
     public var body: some View {
         if let text = text {
             Text(text)
+                .frame(maxWidth: 1000, alignment: .leading)
                 .font(.system(size: HeaderSize.h2.rawValue))
                 .padding()
         }
@@ -233,6 +242,7 @@ public struct H3: View {
     public var body: some View {
         if let text = text {
             Text(text)
+                .frame(maxWidth: 1000, alignment: .leading)
                 .font(.system(size: HeaderSize.h3.rawValue))
                 .padding()
         }
@@ -250,6 +260,7 @@ public struct H4: View {
     public var body: some View {
         if let text = text {
             Text(text)
+                .frame(maxWidth: 1000, alignment: .leading)
                 .font(.system(size: HeaderSize.h4.rawValue))
                 .padding()
         }
@@ -267,6 +278,7 @@ public struct H5: View {
     public var body: some View {
         if let text = text {
             Text(text)
+                .frame(maxWidth: 1000, alignment: .leading)
                 .font(.system(size: HeaderSize.h5.rawValue))
                 .padding()
         }
@@ -284,6 +296,7 @@ public struct H6: View {
     public var body: some View {
         if let text = text {
             Text(text)
+                .frame(maxWidth: 1000, alignment: .leading)
                 .font(.system(size: HeaderSize.h6.rawValue))
                 .padding()
         }
@@ -301,8 +314,11 @@ public struct P: View {
     public var body: some View {
         if let text = text {
             Text(text)
+                .frame(maxWidth: 1000, maxHeight: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
                 .font(.system(size: 18))
                 .padding()
+                
         }
     }
 }
