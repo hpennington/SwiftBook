@@ -178,20 +178,25 @@ private struct SwiftBookCanvasInner: View {
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookControlColor: View {
     @Binding public var color: Color
+    let title: String
     
-    public init(color: Binding<Color>) {
+    public init(color: Binding<Color>, title: String) {
         self._color = color
+        self.title = title
     }
     
     public var body: some View {
-        HStack {
+        VStack {
             Circle()
-                .frame(width: 40, height: 40, alignment: .center)
+                .frame(width: 30, height: 30, alignment: .center)
                 .foregroundColor(color)
                 .padding()
                 .onTapGesture {
                     color = Color.random()
                 }
+            Spacer()
+            Text(title)
+                .font(.system(size: 14))
         }
     }
 }
@@ -207,11 +212,16 @@ public struct SwiftBookControlToggle: View {
     }
     
     public var body: some View {
-        Toggle(isOn: $active) {
+        VStack {
+            Toggle(isOn: $active) {
+                
+            }.toggleStyle(SwitchToggleStyle())
+            .padding()
+            Spacer()
             Text(title)
+                .font(.system(size: 14))
         }
-        .toggleStyle(SwitchToggleStyle())
-
+ 
     }
 }
 
