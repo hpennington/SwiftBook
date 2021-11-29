@@ -40,7 +40,7 @@ public struct SwiftBook: View {
                 
                 .frame(maxWidth: 200)
                 VStack {
-                    SwiftBookCanvas(title: doc.title, description: doc.description, components: $components, controls: doc.controls, argsTable: doc.argsTable, selectedIndex: selectedIndex)
+                    SwiftBookCanvas(title: doc.title, description: doc.description, stories: $components, controls: doc.controls, argsTable: doc.argsTable, selectedIndex: selectedIndex)
                         .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
                 }
             }
@@ -57,7 +57,7 @@ public struct SwiftBook: View {
 private struct SwiftBookCanvas: View {
     let title: String
     let description: String
-    @Binding var components: [AnyView]
+    @Binding var stories: [AnyView]
     let controls: [[AnyView]]
     let argsTable: [SwiftBookArgRow]
     var selectedIndex: Int
@@ -74,8 +74,8 @@ private struct SwiftBookCanvas: View {
                     .frame(maxWidth: 1000, alignment: .leading)
                     .font(.system(size: 18))
                     .padding()
-                ForEach(0..<components.count, id: \.self) { index in
-                    SwiftBookCanvasInner(components: $components, controls: controls, argsTable: argsTable, index: index)
+                ForEach(0..<stories.count, id: \.self) { index in
+                    SwiftBookCanvasInner(components: $stories, controls: controls, argsTable: argsTable, index: index)
                 }
             }
             .frame(minWidth: 800, maxWidth: .infinity, maxHeight: .infinity)
