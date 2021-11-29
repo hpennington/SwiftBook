@@ -180,16 +180,19 @@ private struct SwiftBookCanvasInner: View {
     typealias NSViewType = NSColorWell
     
     @Binding var color: Color
+    let colorWell = NSColorWell()
     
     public init(color: Binding<Color>) {
         self._color = color
+        super.init()
+        self.colorWell.addObserver(self, forKeyPath: "color", options: .new, context: nil)
     }
     
     deinit {
         colorWell.removeObserver(self, forKeyPath: "color")
     }
     
-    let colorWell = NSColorWell()
+    
 
     func updateNSView(_ nsView: NSViewType, context: Context) {
     }
@@ -200,7 +203,6 @@ private struct SwiftBookCanvasInner: View {
     
     func activate(active: Bool) {
         colorWell.activate(active)
-        colorWell.addObserver(self, forKeyPath: "color", options: .new, context: nil)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
