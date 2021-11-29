@@ -191,8 +191,6 @@ private struct SwiftBookCanvasInner: View {
     deinit {
         colorWell.removeObserver(self, forKeyPath: "color")
     }
-    
-    
 
     func updateNSView(_ nsView: NSViewType, context: Context) {
     }
