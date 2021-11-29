@@ -1,3 +1,3 @@
 # SwiftBook
 
-A Swift library for documenting, isolating, mocking, and testing SwiftUI components.
+A Swift library for documenting, isolating, and testing SwiftUI components.
