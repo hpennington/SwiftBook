@@ -1,5 +1,26 @@
 import SwiftUI
 
+let windowMinWidth: CGFloat = 1100
+let windowMinHeight: CGFloat = 700
+let navigationWidth: CGFloat = 200
+let maxCanvasWidth: CGFloat = 1000
+let argsTableWidth: CGFloat = 400
+
+@available(iOS 13, macOS 10.15, *)
+extension Color {
+    static var offWhite: Color {
+        Color(red: 0.95, green: 0.95, blue: 0.95)
+    }
+    
+    static var offBlack: Color {
+        Color(red: 0.05, green: 0.05, blue: 0.05)
+    }
+    
+    static var darkBackground: Color {
+        Color(red: 0.1, green: 0.1, blue: 0.1)
+    }
+}
+
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBook: View {
     @Environment(\.colorScheme) var colorScheme
@@ -12,23 +33,26 @@ public struct SwiftBook: View {
     
     public init(docs: [SwiftBookDoc]) {
         self.docs = docs
-        self.titles = docs.compactMap({doc in
+        self.titles = docs.map({doc in
             return doc.title
         })
     }
     
+    let padding: CGFloat = 15
+    let cornerRadius: CGFloat = 10
+
     public var body: some View {
-        if self.docs.count > 0 {
+        if self.docs.count > selectedIndex {
             let doc = self.docs[selectedIndex]
             HStack {
                 VStack(alignment: .center) {
                     List(0..<titles.count) { index in
                         Text(titles[index])
-                            .padding(15)
-                            .frame(width: 170, alignment: .leading)
+                            .padding(padding)
+                            .frame(width: navigationWidth - (padding * 2), alignment: .leading)
                             .foregroundColor(selectedIndex == index ? .blue : .primary)
-                            .background(colorScheme == .dark ? Color(NSColor.underPageBackgroundColor) : Color(red: 0.95, green: 0.95, blue: 0.95))
-                            .cornerRadius(10)
+                            .background(colorScheme == .dark ? Color(NSColor.underPageBackgroundColor) : Color.offWhite)
+                            .cornerRadius(cornerRadius)
                             .onTapGesture {
                                 selectedIndex = index
                                 let doc = docs[index]
@@ -38,13 +62,13 @@ public struct SwiftBook: View {
                     
                 }
                 
-                .frame(maxWidth: 200)
+                .frame(maxWidth: navigationWidth)
                 VStack {
                     SwiftBookCanvas(title: doc.title, description: doc.description, stories: $stories, controls: doc.controls, argsTable: doc.argsTable, selectedIndex: selectedIndex)
-                        .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
+                        .background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
                 }
             }
-            .frame(minWidth: 1100, minHeight: 700)
+            .frame(minWidth: windowMinWidth, minHeight: windowMinHeight)
             .onAppear(perform: {
                 self.stories = doc.stories
             })
@@ -67,18 +91,18 @@ private struct SwiftBookCanvas: View {
             Spacer(minLength: 100)
             VStack {
                 Text(title)
-                    .frame(maxWidth: 1000, alignment: .leading)
+                    .frame(maxWidth: maxCanvasWidth, alignment: .leading)
                     .font(.system(size: 44))
                     .padding()
                 Text(description)
-                    .frame(maxWidth: 1000, alignment: .leading)
+                    .frame(maxWidth: maxCanvasWidth, alignment: .leading)
                     .font(.system(size: 18))
                     .padding()
                 ForEach(0..<stories.count, id: \.self) { index in
                     SwiftBookCanvasInner(stories: $stories, controls: controls, argsTable: argsTable, index: index)
                 }
             }
-            .frame(minWidth: 800, maxWidth: .infinity, maxHeight: .infinity)
+            .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
             Spacer(minLength: 100)
         }
         .id(selectedIndex)
@@ -114,9 +138,9 @@ private struct SwiftBookCanvasInner: View {
                     .font(.headline)
                 ForEach(0..<argsTable.count, id: \.self) { argsIndex in
                     argsTable[argsIndex]
-                        .frame(width: 400, alignment: .leading)
+                        .frame(width: argsTableWidth, alignment: .leading)
                         .padding()
-                        .background(colorScheme == .dark ? Color(red: 0.05, green: 0.05, blue: 0.05) : .white)
+                        .background(colorScheme == .dark ? Color.offBlack : .white)
                         .foregroundColor(Color.primary)
                         .cornerRadius(10.0)
                 }
@@ -224,7 +248,7 @@ public struct H1: View {
     public var body: some View {
         if let text = text {
             Text(text)
-                .frame(maxWidth: 1000, alignment: .leading)
+                .frame(maxWidth: maxCanvasWidth, alignment: .leading)
                 .font(.system(size: HeaderSize.h1.rawValue))
                 .padding()
         }
@@ -242,7 +266,7 @@ public struct H2: View {
     public var body: some View {
         if let text = text {
             Text(text)
-                .frame(maxWidth: 1000, alignment: .leading)
+                .frame(maxWidth: maxCanvasWidth, alignment: .leading)
                 .font(.system(size: HeaderSize.h2.rawValue))
                 .padding()
         }
@@ -260,7 +284,7 @@ public struct H3: View {
     public var body: some View {
         if let text = text {
             Text(text)
-                .frame(maxWidth: 1000, alignment: .leading)
+                .frame(maxWidth: maxCanvasWidth, alignment: .leading)
                 .font(.system(size: HeaderSize.h3.rawValue))
                 .padding()
         }
@@ -278,7 +302,7 @@ public struct H4: View {
     public var body: some View {
         if let text = text {
             Text(text)
-                .frame(maxWidth: 1000, alignment: .leading)
+                .frame(maxWidth: maxCanvasWidth, alignment: .leading)
                 .font(.system(size: HeaderSize.h4.rawValue))
                 .padding()
         }
@@ -296,7 +320,7 @@ public struct H5: View {
     public var body: some View {
         if let text = text {
             Text(text)
-                .frame(maxWidth: 1000, alignment: .leading)
+                .frame(maxWidth: maxCanvasWidth, alignment: .leading)
                 .font(.system(size: HeaderSize.h5.rawValue))
                 .padding()
         }
@@ -314,7 +338,7 @@ public struct H6: View {
     public var body: some View {
         if let text = text {
             Text(text)
-                .frame(maxWidth: 1000, alignment: .leading)
+                .frame(maxWidth: maxCanvasWidth, alignment: .leading)
                 .font(.system(size: HeaderSize.h6.rawValue))
                 .padding()
         }
@@ -332,7 +356,7 @@ public struct P: View {
     public var body: some View {
         if let text = text {
             Text(text)
-                .frame(maxWidth: 1000, maxHeight: .infinity, alignment: .leading)
+                .frame(maxWidth: maxCanvasWidth, maxHeight: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
                 .font(.system(size: 18))
                 .padding()
