@@ -20,24 +20,30 @@ public struct SwiftBook: View {
     public var body: some View {
         if self.docs.count > 0 {
             HStack {
-                VStack {
+                VStack(alignment: .center) {
+                    Spacer(minLength: 25)
                     List(0..<titles.count) { index in
                         Text(titles[index])
+                            .padding(15)
+                            .frame(width: 170, alignment: .leading)
+                            .foregroundColor(selectedIndex == index ? .blue : .primary)
+                            .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
+                            .cornerRadius(10)
                             .onTapGesture {
                                 selectedIndex = index
                                 components = (docs[index] as! SwiftBookDoc).stories
                             }
-                            .padding(2)
-                            .foregroundColor(selectedIndex == index ? .blue : .primary)
                     }
+                    
                 }
                 .frame(maxWidth: 200)
                 VStack {
                     SwiftBookCanvas(title: (self.docs[selectedIndex] as! SwiftBookDoc).title, description: (self.docs[selectedIndex] as! SwiftBookDoc).description, components: $components, controls: (self.docs[selectedIndex] as! SwiftBookDoc).controls, argsTable: (self.docs[selectedIndex] as! SwiftBookDoc).argsTable, selectedIndex: selectedIndex)
+                        .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
                 }
             }
             .frame(minWidth: 1100, minHeight: 700)
-            .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
+            
             .onAppear(perform: {
                 self.components = (docs[0] as! SwiftBookDoc).stories
             })
