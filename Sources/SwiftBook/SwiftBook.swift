@@ -103,6 +103,21 @@ public struct SwiftBook: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
+public struct SwiftBookComponent<C: View> : View {
+  let component: C
+  
+  public init(_ component: () -> (C)) {
+    self.component = component()
+  }
+  
+  public var body: some View {
+    component
+        .frame(maxWidth: maxCanvasWidth, alignment: .center)
+        .padding()
+  }
+}
+
+@available(iOS 13, macOS 10.15, *)
 private struct SwiftBookCanvas: View {
     let title: String
     let description: String
