@@ -32,7 +32,9 @@ public struct SwiftBook: View {
                     }
                 }
                 .frame(maxWidth: 200)
-                SwiftBookCanvas(components: $components, controls: (self.docs[selectedIndex] as! SwiftBookDoc).controls, argsTable: (self.docs[selectedIndex] as! SwiftBookDoc).argsTable, selectedIndex: selectedIndex)
+                VStack {
+                    SwiftBookCanvas(title: (self.docs[selectedIndex] as! SwiftBookDoc).title, components: $components, controls: (self.docs[selectedIndex] as! SwiftBookDoc).controls, argsTable: (self.docs[selectedIndex] as! SwiftBookDoc).argsTable, selectedIndex: selectedIndex)
+                }
             }
             .frame(minWidth: 1100, minHeight: 700)
             .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
@@ -45,6 +47,7 @@ public struct SwiftBook: View {
 
 @available(iOS 13, macOS 10.15, *)
 private struct SwiftBookCanvas: View {
+    let title: String
     @Binding var components: [AnyView]
     let controls: [[AnyView]]
     let argsTable: [SwiftBookArgRow]
@@ -53,34 +56,52 @@ private struct SwiftBookCanvas: View {
     var body: some View {
         ScrollView {
             VStack {
+                Text(title)
+                    .font(.system(size: 44))
+                    .padding()
                 ForEach(0..<components.count, id: \.self) { index in
-                    components[index]
-                    HStack {
-                        if controls.count > index {
-                     
-                            ForEach(0..<controls[index].count, id: \.self) { controlIndex in
-            
-                                controls[index][controlIndex]
-                                
-                            }
-                     
-                        }
-                    }
-                    
-                    VStack {
-                        ForEach(0..<argsTable.count) { argsIndex in
-                            argsTable[argsIndex]
-                                .frame(width: 400)
-                                .padding()
-                                .background(Color.gray)
-                                .foregroundColor(Color.primary)
-                        }
-                    }
-                    
+                    SwiftBookCanvasInner(components: $components, controls: controls, argsTable: argsTable, index: index)
                 }
             }.frame(minWidth: 800, maxWidth: .infinity, maxHeight: .infinity)
-
         }
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
+private struct SwiftBookCanvasInner: View {
+    @Environment(\.colorScheme) var colorScheme
+    @Binding var components: [AnyView]
+    let controls: [[AnyView]]
+    let argsTable: [SwiftBookArgRow]
+    let index: Int
+    
+    var body: some View {
+        if index < components.count {
+            components[index]
+            HStack {
+                if controls.count > index {
+             
+                    ForEach(0..<controls[index].count, id: \.self) { controlIndex in
+
+                        controls[index][controlIndex]
+                        
+                    }
+             
+                }
+            }
+            
+            VStack {
+                ForEach(0..<argsTable.count, id: \.self) { argsIndex in
+                    argsTable[argsIndex]
+                        .frame(width: 400)
+                        .padding()
+                        .background(colorScheme == .dark ? Color(red: 0.05, green: 0.05, blue: 0.05) : .white)
+                        .foregroundColor(Color.primary)
+                        .cornerRadius(10.0)
+                }
+            }
+        }
+        
     }
 }
 
