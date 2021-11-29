@@ -6,18 +6,18 @@ public struct SwiftBook: View {
     
     let docs: [Any]
     let titles: [String]
-    
-    @Binding var colors: [Color]
+    let controls: [[AnyView]]
+
     @State var components: [AnyView] = []
     @State var selectedIndex = 0
     
-    public init(docs: [Any], colors: Binding<[Color]>) {
+    public init(docs: [Any], controls: [[AnyView]]) {
         self.docs = docs
         self.titles = docs.compactMap({doc in
             (doc as! SwiftBookDoc).title
         })
         
-        self._colors = colors
+        self.controls = controls
     }
     
     public var body: some View {
@@ -39,8 +39,12 @@ public struct SwiftBook: View {
                     VStack {
                         ForEach(0..<components.count, id: \.self) { index in
                             components[index]
+                            if controls[selectedIndex].count > index {
+                                controls[selectedIndex][index]
+                            }
                         }
                     }.frame(minWidth: 800, maxWidth: .infinity, maxHeight: .infinity)
+
                 }
             }
             .frame(minWidth: 1100, minHeight: 700)
@@ -48,10 +52,6 @@ public struct SwiftBook: View {
             .onAppear(perform: {
                 self.components = (docs[0] as! SwiftBookDoc).stories
             })
-            .onTapGesture {
-                self.colors[0] = Color.orange
-                print(self.colors[0])
-            }
         }
     }
 }
@@ -63,24 +63,22 @@ public protocol SwiftBookDoc {
 }
 
 @available(iOS 13, macOS 10.15, *)
-public struct SwiftBookControlsColor: View {
-    @Binding public var colors: [Color]
+public struct SwiftBookControlColor: View {
+    @Binding public var color: Color
     
-    public init(colors: Binding<[Color]>) {
-        self._colors = colors
+    public init(color: Binding<Color>) {
+        self._color = color
     }
     
     public var body: some View {
         HStack {
-            ForEach(0..<colors.count, id: \.self) { index in
-                Circle()
-                    .frame(width: 40, height: 40, alignment: .center)
-                    .foregroundColor(colors[index])
-                    .padding()
-                    .onTapGesture {
-                        colors[index] = .green
-                    }
-            }
+            Circle()
+                .frame(width: 40, height: 40, alignment: .center)
+                .foregroundColor(color)
+                .padding()
+                .onTapGesture {
+                    color = .green
+                }
         }
     }
 }
