@@ -14,7 +14,7 @@ public struct SwiftBook: View {
         self.docs = docs
         self.titles = docs.compactMap({doc in
             guard let doc = doc as? SwiftBookDoc else {
-                return nil
+                fatalError("Doc is not SwiftBookDoc")
             }
             
             return doc.title
