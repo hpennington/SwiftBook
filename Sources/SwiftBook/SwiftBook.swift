@@ -27,6 +27,11 @@ extension Color {
     }
 }
 
+/// SwiftBookDoc
+///
+/// SwiftBook has the concepts of "docs" that contain the "stories".
+/// Create a doc file and conform to SwiftBookDoc.
+/// Fill the stories property with Views containing your components.
 @available(iOS 13, macOS 10.15, *)
 public protocol SwiftBookDoc {
     var title: String { get }
