@@ -56,6 +56,7 @@ private struct SwiftBookCanvas: View {
     
     var body: some View {
         ScrollView {
+            Spacer(minLength: 100)
             VStack {
                 Text(title)
                     .frame(maxWidth: 1000, alignment: .leading)
@@ -69,6 +70,7 @@ private struct SwiftBookCanvas: View {
                     SwiftBookCanvasInner(components: $components, controls: controls, argsTable: argsTable, index: index)
                 }
             }.frame(minWidth: 800, maxWidth: .infinity, maxHeight: .infinity)
+            Spacer(minLength: 100)
         }
     }
 }
