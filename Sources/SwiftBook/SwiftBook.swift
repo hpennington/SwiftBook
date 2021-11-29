@@ -13,39 +13,47 @@ public struct SwiftBook: View {
     public init(docs: [Any]) {
         self.docs = docs
         self.titles = docs.compactMap({doc in
-            (doc as! SwiftBookDoc).title
+            guard let doc = doc as? SwiftBookDoc else {
+                return nil
+            }
+            
+            return doc.title
         })
     }
     
     public var body: some View {
         if self.docs.count > 0 {
-            HStack {
-                VStack(alignment: .center) {
-                    List(0..<titles.count) { index in
-                        Text(titles[index])
-                            .padding(15)
-                            .frame(width: 170, alignment: .leading)
-                            .foregroundColor(selectedIndex == index ? .blue : .primary)
-                            .background(colorScheme == .dark ? Color(NSColor.underPageBackgroundColor) : Color(red: 0.95, green: 0.95, blue: 0.95))
-                            .cornerRadius(10)
-                            .onTapGesture {
-                                selectedIndex = index
-                                components = (docs[index] as! SwiftBookDoc).stories
-                            }
+            if let doc = self.docs[selectedIndex] as? SwiftBookDoc {
+                HStack {
+                    VStack(alignment: .center) {
+                        List(0..<titles.count) { index in
+                            Text(titles[index])
+                                .padding(15)
+                                .frame(width: 170, alignment: .leading)
+                                .foregroundColor(selectedIndex == index ? .blue : .primary)
+                                .background(colorScheme == .dark ? Color(NSColor.underPageBackgroundColor) : Color(red: 0.95, green: 0.95, blue: 0.95))
+                                .cornerRadius(10)
+                                .onTapGesture {
+                                    selectedIndex = index
+                                    if let doc = docs[index] as? SwiftBookDoc {
+                                        components = doc.stories
+                                    }
+                                }
+                        }
+                        
                     }
                     
+                    .frame(maxWidth: 200)
+                    VStack {
+                        SwiftBookCanvas(title: doc.title, description: doc.description, components: $components, controls: doc.controls, argsTable: doc.argsTable, selectedIndex: selectedIndex)
+                            .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
+                    }
                 }
-                
-                .frame(maxWidth: 200)
-                VStack {
-                    SwiftBookCanvas(title: (self.docs[selectedIndex] as! SwiftBookDoc).title, description: (self.docs[selectedIndex] as! SwiftBookDoc).description, components: $components, controls: (self.docs[selectedIndex] as! SwiftBookDoc).controls, argsTable: (self.docs[selectedIndex] as! SwiftBookDoc).argsTable, selectedIndex: selectedIndex)
-                        .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
-                }
+                .frame(minWidth: 1100, minHeight: 700)
+                .onAppear(perform: {
+                    self.components = doc.stories
+                })
             }
-            .frame(minWidth: 1100, minHeight: 700)
-            .onAppear(perform: {
-                self.components = (docs[0] as! SwiftBookDoc).stories
-            })
         }
     }
 }
