@@ -7,7 +7,7 @@ public struct SwiftBook: View {
     let docs: [SwiftBookDoc]
     let titles: [String]
 
-    @State var components: [AnyView] = []
+    @State var stories: [AnyView] = []
     @State var selectedIndex = 0
     
     public init(docs: [SwiftBookDoc]) {
@@ -32,7 +32,7 @@ public struct SwiftBook: View {
                             .onTapGesture {
                                 selectedIndex = index
                                 let doc = docs[index]
-                                components = doc.stories
+                                stories = doc.stories
                             }
                     }
                     
@@ -40,13 +40,13 @@ public struct SwiftBook: View {
                 
                 .frame(maxWidth: 200)
                 VStack {
-                    SwiftBookCanvas(title: doc.title, description: doc.description, stories: $components, controls: doc.controls, argsTable: doc.argsTable, selectedIndex: selectedIndex)
+                    SwiftBookCanvas(title: doc.title, description: doc.description, stories: $stories, controls: doc.controls, argsTable: doc.argsTable, selectedIndex: selectedIndex)
                         .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
                 }
             }
             .frame(minWidth: 1100, minHeight: 700)
             .onAppear(perform: {
-                self.components = doc.stories
+                self.stories = doc.stories
             })
             
         }
@@ -75,7 +75,7 @@ private struct SwiftBookCanvas: View {
                     .font(.system(size: 18))
                     .padding()
                 ForEach(0..<stories.count, id: \.self) { index in
-                    SwiftBookCanvasInner(components: $stories, controls: controls, argsTable: argsTable, index: index)
+                    SwiftBookCanvasInner(stories: $stories, controls: controls, argsTable: argsTable, index: index)
                 }
             }
             .frame(minWidth: 800, maxWidth: .infinity, maxHeight: .infinity)
@@ -88,14 +88,14 @@ private struct SwiftBookCanvas: View {
 @available(iOS 13, macOS 10.15, *)
 private struct SwiftBookCanvasInner: View {
     @Environment(\.colorScheme) var colorScheme
-    @Binding var components: [AnyView]
+    @Binding var stories: [AnyView]
     let controls: [[AnyView]]
     let argsTable: [SwiftBookArgRow]
     let index: Int
     
     var body: some View {
-        if index < components.count {
-            components[index]
+        if index < stories.count {
+            stories[index]
             HStack {
                 if controls.count > index {
              
