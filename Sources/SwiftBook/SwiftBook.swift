@@ -279,9 +279,33 @@ public struct SwiftBookControlToggle: View {
     }
 }
 
+@available(iOS 13, macOS 10.15, *)
+public struct SwiftBookControlText: View {
+    @Binding var text: String
+    let label: String
+    
+    public init(text: Binding<String>, label: String) {
+        self._text = text
+        self.label = label
+    }
+    
+    public var body: some View {
+        VStack {
+            TextField(text, text: $text)
+                .frame(maxWidth: 400)
+                .padding()
+                .fixedSize()
+            Spacer()
+            Text(label)
+        }
+        
+    }
+}
+
 public enum SwiftBookArgType: String {
     case bool = "Bool"
     case color = "Color"
+    case string = "String"
 }
 
 @available(iOS 13, macOS 10.15, *)
