@@ -176,13 +176,51 @@ private struct SwiftBookCanvasInner: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
+@objc final class ColorWell: NSObject, NSViewRepresentable {
+    typealias NSViewType = NSColorWell
+    
+    @Binding var color: Color
+    
+    public init(color: Binding<Color>) {
+        self._color = color
+    }
+    
+    deinit {
+        colorWell.removeObserver(self, forKeyPath: "color")
+    }
+    
+    let colorWell = NSColorWell()
+
+    func updateNSView(_ nsView: NSViewType, context: Context) {
+    }
+    
+    func makeNSView(context: Context) -> NSColorWell {
+        colorWell
+    }
+    
+    func activate(active: Bool) {
+        colorWell.activate(active)
+        colorWell.addObserver(self, forKeyPath: "color", options: .new, context: nil)
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "color" {
+            color = Color(colorWell.color)
+        }
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
 public struct SwiftBookControlColor: View {
     @Binding public var color: Color
     let title: String
     
+    @State var colorWell: ColorWell
+
     public init(color: Binding<Color>, title: String) {
         self._color = color
         self.title = title
+        self.colorWell = ColorWell(color: color)
     }
     
     public var body: some View {
@@ -192,7 +230,7 @@ public struct SwiftBookControlColor: View {
                 .foregroundColor(color)
                 .padding()
                 .onTapGesture {
-                    color = Color.random()
+                    colorWell.activate(active: true)
                 }
             Spacer()
             Text(title)
