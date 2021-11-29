@@ -6,14 +6,18 @@ public struct SwiftBook: View {
     
     let docs: [Any]
     let titles: [String]
+    
+    @Binding var colors: [Color]
     @State var components: [AnyView] = []
     @State var selectedIndex = 0
     
-    public init(docs: [Any]) {
+    public init(docs: [Any], colors: Binding<[Color]>) {
         self.docs = docs
         self.titles = docs.compactMap({doc in
             (doc as! SwiftBookDoc).title
         })
+        
+        self._colors = colors
     }
     
     public var body: some View {
@@ -44,6 +48,10 @@ public struct SwiftBook: View {
             .onAppear(perform: {
                 self.components = (docs[0] as! SwiftBookDoc).stories
             })
+            .onTapGesture {
+                self.colors[0] = Color.orange
+                print(self.colors[0])
+            }
         }
     }
 }
@@ -52,4 +60,27 @@ public struct SwiftBook: View {
 public protocol SwiftBookDoc {
     var title: String { get }
     var stories: [AnyView] { get }
+}
+
+@available(iOS 13, macOS 10.15, *)
+public struct SwiftBookControlsColor: View {
+    @Binding public var colors: [Color]
+    
+    public init(colors: Binding<[Color]>) {
+        self._colors = colors
+    }
+    
+    public var body: some View {
+        HStack {
+            ForEach(0..<colors.count, id: \.self) { index in
+                Circle()
+                    .frame(width: 40, height: 40, alignment: .center)
+                    .foregroundColor(colors[index])
+                    .padding()
+                    .onTapGesture {
+                        colors[index] = .green
+                    }
+            }
+        }
+    }
 }
