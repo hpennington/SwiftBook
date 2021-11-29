@@ -22,6 +22,15 @@ extension Color {
 }
 
 @available(iOS 13, macOS 10.15, *)
+public protocol SwiftBookDoc {
+    var title: String { get }
+    var description: String { get }
+    var argsTable: [SwiftBookArgRow] { get }
+    var controls: [[AnyView]] { get }
+    var stories: [AnyView] { get }
+}
+
+@available(iOS 13, macOS 10.15, *)
 public struct SwiftBook: View {
     @Environment(\.colorScheme) var colorScheme
     
@@ -151,15 +160,6 @@ private struct SwiftBookCanvasInner: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
-public protocol SwiftBookDoc {
-    var title: String { get }
-    var description: String { get }
-    var argsTable: [SwiftBookArgRow] { get }
-    var controls: [[AnyView]] { get }
-    var stories: [AnyView] { get }
-}
-
-@available(iOS 13, macOS 10.15, *)
 public struct SwiftBookControlColor: View {
     @Binding public var color: Color
     
@@ -199,6 +199,11 @@ public struct SwiftBookControlToggle: View {
     }
 }
 
+public enum SwiftBookArgType: String {
+    case bool = "Bool"
+    case color = "Color"
+}
+
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookArgRow: View {
     public let title: String
@@ -221,11 +226,6 @@ public struct SwiftBookArgRow: View {
             Spacer()
         }
     }
-}
-
-public enum SwiftBookArgType: String {
-    case bool = "Bool"
-    case color = "Color"
 }
 
 public enum HeaderSize: CGFloat {
