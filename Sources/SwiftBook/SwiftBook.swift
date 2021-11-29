@@ -82,9 +82,11 @@ private struct SwiftBookCanvas: View {
                 ForEach(0..<components.count, id: \.self) { index in
                     SwiftBookCanvasInner(components: $components, controls: controls, argsTable: argsTable, index: index)
                 }
-            }.frame(minWidth: 800, maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .frame(minWidth: 800, maxWidth: .infinity, maxHeight: .infinity)
             Spacer(minLength: 100)
         }
+        .id(selectedIndex)
     }
 }
 
