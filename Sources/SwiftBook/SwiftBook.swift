@@ -6,18 +6,15 @@ public struct SwiftBook: View {
     
     let docs: [Any]
     let titles: [String]
-    let controls: [[[AnyView]]]
 
     @State var components: [AnyView] = []
     @State var selectedIndex = 0
     
-    public init(docs: [Any], controls: [[[AnyView]]]) {
+    public init(docs: [Any]) {
         self.docs = docs
         self.titles = docs.compactMap({doc in
             (doc as! SwiftBookDoc).title
         })
-        
-        self.controls = controls
     }
     
     public var body: some View {
@@ -31,11 +28,11 @@ public struct SwiftBook: View {
                                 components = (docs[index] as! SwiftBookDoc).stories
                             }
                             .padding(2)
-                            .foregroundColor(selectedIndex == index ? .blue : .white)
+                            .foregroundColor(selectedIndex == index ? .blue : .primary)
                     }
                 }
                 .frame(maxWidth: 200)
-                SwiftBookCanvas(components: $components, controls: controls, selectedIndex: selectedIndex)
+                SwiftBookCanvas(components: $components, controls: (self.docs[selectedIndex] as! SwiftBookDoc).controls, argsTable: (self.docs[selectedIndex] as! SwiftBookDoc).argsTable, selectedIndex: selectedIndex)
             }
             .frame(minWidth: 1100, minHeight: 700)
             .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
@@ -49,7 +46,8 @@ public struct SwiftBook: View {
 @available(iOS 13, macOS 10.15, *)
 private struct SwiftBookCanvas: View {
     @Binding var components: [AnyView]
-    let controls: [[[AnyView]]]
+    let controls: [[AnyView]]
+    let argsTable: [SwiftBookArgRow]
     var selectedIndex: Int
     
     var body: some View {
@@ -58,14 +56,24 @@ private struct SwiftBookCanvas: View {
                 ForEach(0..<components.count, id: \.self) { index in
                     components[index]
                     HStack {
-                        if controls[selectedIndex].count > index {
+                        if controls.count > index {
                      
-                            ForEach(0..<controls[selectedIndex][index].count, id: \.self) { controlIndex in
-                                
-                                controls[selectedIndex][index][controlIndex]
+                            ForEach(0..<controls[index].count, id: \.self) { controlIndex in
+            
+                                controls[index][controlIndex]
                                 
                             }
                      
+                        }
+                    }
+                    
+                    VStack {
+                        ForEach(0..<argsTable.count) { argsIndex in
+                            argsTable[argsIndex]
+                                .frame(width: 400)
+                                .padding()
+                                .background(Color.gray)
+                                .foregroundColor(Color.primary)
                         }
                     }
                     
@@ -79,6 +87,8 @@ private struct SwiftBookCanvas: View {
 @available(iOS 13, macOS 10.15, *)
 public protocol SwiftBookDoc {
     var title: String { get }
+    var argsTable: [SwiftBookArgRow] { get }
+    var controls: [[AnyView]] { get }
     var stories: [AnyView] { get }
 }
 
@@ -116,6 +126,162 @@ public struct SwiftBookControlToggle: View {
     public var body: some View {
         Toggle(isOn: $active) {
             Text(title)
+        }
+        .toggleStyle(SwitchToggleStyle())
+
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
+public struct SwiftBookArgRow: View {
+    public let title: String
+    public let description: String
+    public let type: SwiftBookArgType
+    
+    public init(title: String, description: String, type: SwiftBookArgType) {
+        self.title = title
+        self.description = description
+        self.type = type
+    }
+    
+    public var body: some View {
+        HStack {
+            Text(title)
+            Text(description)
+            Text(type.rawValue)
+        }
+    }
+}
+
+public enum SwiftBookArgType: String {
+    case bool = "Bool"
+    case color = "Color"
+}
+
+public enum HeaderSize: CGFloat {
+    case h1 = 40
+    case h2 = 32
+    case h3 = 24
+    case h4 = 16
+    case h5 = 12
+    case h6 = 8
+}
+
+@available(iOS 13, macOS 10.15, *)
+public struct H1: View {
+    let text: String?
+    
+    public init(_ text: String?) {
+        self.text = text
+    }
+    
+    public var body: some View {
+        if let text = text {
+            Text(text)
+                .font(.system(size: HeaderSize.h1.rawValue))
+                .padding()
+        }
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
+public struct H2: View {
+    let text: String?
+    
+    public init(_ text: String?) {
+        self.text = text
+    }
+    
+    public var body: some View {
+        if let text = text {
+            Text(text)
+                .font(.system(size: HeaderSize.h2.rawValue))
+                .padding()
+        }
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
+public struct H3: View {
+    let text: String?
+    
+    public init(_ text: String?) {
+        self.text = text
+    }
+    
+    public var body: some View {
+        if let text = text {
+            Text(text)
+                .font(.system(size: HeaderSize.h3.rawValue))
+                .padding()
+        }
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
+public struct H4: View {
+    let text: String?
+    
+    public init(_ text: String?) {
+        self.text = text
+    }
+    
+    public var body: some View {
+        if let text = text {
+            Text(text)
+                .font(.system(size: HeaderSize.h4.rawValue))
+                .padding()
+        }
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
+public struct H5: View {
+    let text: String?
+    
+    public init(_ text: String?) {
+        self.text = text
+    }
+    
+    public var body: some View {
+        if let text = text {
+            Text(text)
+                .font(.system(size: HeaderSize.h5.rawValue))
+                .padding()
+        }
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
+public struct H6: View {
+    let text: String?
+    
+    public init(_ text: String?) {
+        self.text = text
+    }
+    
+    public var body: some View {
+        if let text = text {
+            Text(text)
+                .font(.system(size: HeaderSize.h6.rawValue))
+                .padding()
+        }
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
+public struct P: View {
+    let text: String?
+    
+    public init(_ text: String?) {
+        self.text = text
+    }
+    
+    public var body: some View {
+        if let text = text {
+            Text(text)
+                .font(.system(size: 18))
+                .padding()
         }
     }
 }
