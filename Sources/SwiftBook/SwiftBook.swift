@@ -68,7 +68,7 @@ private struct SwiftBookCanvas: View {
     var selectedIndex: Int
     
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             Spacer(minLength: 100)
             VStack {
                 Text(title)
