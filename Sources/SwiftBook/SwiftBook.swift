@@ -21,13 +21,12 @@ public struct SwiftBook: View {
         if self.docs.count > 0 {
             HStack {
                 VStack(alignment: .center) {
-                    Spacer(minLength: 25)
                     List(0..<titles.count) { index in
                         Text(titles[index])
                             .padding(15)
                             .frame(width: 170, alignment: .leading)
                             .foregroundColor(selectedIndex == index ? .blue : .primary)
-                            .background(colorScheme == .dark ? Color(red: 0.1, green: 0.1, blue: 0.1) : Color(red: 0.95, green: 0.95, blue: 0.95))
+                            .background(colorScheme == .dark ? Color(NSColor.underPageBackgroundColor) : Color(red: 0.95, green: 0.95, blue: 0.95))
                             .cornerRadius(10)
                             .onTapGesture {
                                 selectedIndex = index
@@ -36,6 +35,7 @@ public struct SwiftBook: View {
                     }
                     
                 }
+                
                 .frame(maxWidth: 200)
                 VStack {
                     SwiftBookCanvas(title: (self.docs[selectedIndex] as! SwiftBookDoc).title, description: (self.docs[selectedIndex] as! SwiftBookDoc).description, components: $components, controls: (self.docs[selectedIndex] as! SwiftBookDoc).controls, argsTable: (self.docs[selectedIndex] as! SwiftBookDoc).argsTable, selectedIndex: selectedIndex)
@@ -43,7 +43,6 @@ public struct SwiftBook: View {
                 }
             }
             .frame(minWidth: 1100, minHeight: 700)
-            
             .onAppear(perform: {
                 self.components = (docs[0] as! SwiftBookDoc).stories
             })
