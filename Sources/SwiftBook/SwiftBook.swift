@@ -292,8 +292,9 @@ public struct SwiftBookControlText: View {
     public var body: some View {
         VStack {
             TextField(text, text: $text)
-                .frame(maxWidth: 400)
                 .padding()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .frame(maxWidth: 400)
                 .fixedSize()
             Spacer()
             Text(label)
