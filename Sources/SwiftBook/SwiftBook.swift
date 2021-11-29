@@ -185,6 +185,7 @@ private struct SwiftBookCanvasInner: View {
                         .cornerRadius(10.0)
                 }
             }
+            Spacer(minLength: 100)
         }
         
     }
