@@ -19,6 +19,12 @@ extension Color {
     static var darkBackground: Color {
         Color(red: 0.1, green: 0.1, blue: 0.1)
     }
+    
+    static func random() -> Color {
+        let colors: [Color] = [.black, .blue, .gray, .green, .orange, .pink, .purple, .red, .white, .yellow]
+        let index = Int.random(in: 0..<colors.count)
+        return colors[index]
+    }
 }
 
 @available(iOS 13, macOS 10.15, *)
@@ -172,7 +178,7 @@ public struct SwiftBookControlColor: View {
                 .foregroundColor(color)
                 .padding()
                 .onTapGesture {
-                    color = .green
+                    color = Color.random()
                 }
         }
     }
