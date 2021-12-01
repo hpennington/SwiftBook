@@ -24,14 +24,18 @@ extension Color {
 public struct SwiftBook<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     
+    @State private var selectedIndex = 0
+    
     let content: Content
+    let onNavChange: (_ document: String) -> ()
     let titles: [String]
     
     let padding: CGFloat = 15
     let cornerRadius: CGFloat = 10
     
-    public init(titles: [String], @ViewBuilder content: () -> Content) {
+    public init(titles: [String], onNavChange: @escaping (_ document: String) -> (), @ViewBuilder content: () -> Content) {
         self.titles = titles
+        self.onNavChange = onNavChange
         self.content = content()
     }
     
@@ -43,14 +47,13 @@ public struct SwiftBook<Content: View>: View {
                        Text(titles[index])
                            .padding(padding)
                            .frame(width: navigationWidth - (padding * 2), alignment: .leading)
-//                           .foregroundColor(selectedIndex == index ? .blue : .primary)
+                           .foregroundColor(selectedIndex == index ? .blue : .primary)
                            .background(colorScheme == .dark ? Color(NSColor.underPageBackgroundColor) : Color.offWhite)
                            .cornerRadius(cornerRadius)
-//                           .onTapGesture {
-//                               selectedIndex = index
-//                               let doc = docs[index]
-//                               stories = doc.stories
-//                           }
+                           .onTapGesture {
+                                self.onNavChange(self.titles[index])
+                                self.selectedIndex = index
+                           }
                    }
 
                }
