@@ -74,28 +74,19 @@ public struct SwiftBook<Content: View>: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
-public struct ArgsTable: View {
-    @Environment(\.colorScheme) var colorScheme
-    
-    let argsTable: [SwiftBookArgRow]
-    
-    public init(argsTable: [SwiftBookArgRow]) {
-        self.argsTable = argsTable
-    }
-    
+public struct ArgsTable<C: View> : View {
+  let component: C
+  
+  public init(_ component: () -> (C)) {
+    self.component = component()
+  }
+  
     public var body: some View {
         VStack(alignment: .leading) {
             Text("Arguments")
                 .padding()
                 .font(.headline)
-            ForEach(0..<argsTable.count, id: \.self) { argsIndex in
-                argsTable[argsIndex]
-                    .frame(width: 400, alignment: .leading)
-                    .padding()
-                    .background(colorScheme == .dark ? Color.offBlack : .white)
-                    .foregroundColor(Color.primary)
-                    .cornerRadius(10.0)
-            }
+            component
         }
     }
 }
@@ -235,6 +226,8 @@ public enum SwiftBookArgType: String {
 
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookArgRow: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     public let title: String
     public let description: String
     public let type: SwiftBookArgType
@@ -254,6 +247,11 @@ public struct SwiftBookArgRow: View {
             Text(description)
             Spacer()
         }
+        .frame(width: 400, alignment: .leading)
+        .padding()
+        .background(colorScheme == .dark ? Color.offBlack : .white)
+        .foregroundColor(Color.primary)
+        .cornerRadius(10.0)
     }
 }
 
