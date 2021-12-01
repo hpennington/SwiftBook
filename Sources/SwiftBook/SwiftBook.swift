@@ -74,7 +74,7 @@ public struct SwiftBook<Content: View>: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
-public struct ArgsTable<C: View> : View {
+public struct SwiftBookArgsTable<C: View> : View {
   let component: C
   
   public init(_ component: () -> (C)) {
