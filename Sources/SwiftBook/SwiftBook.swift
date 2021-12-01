@@ -26,67 +26,122 @@ extension Color {
 /// Create a doc file and conform to SwiftBookDoc.
 /// Fill the stories property with Views containing your components.
 @available(iOS 13, macOS 10.15, *)
-public protocol SwiftBookDoc {
-    var title: String { get }
-    var description: String { get }
+public protocol SwiftBookDoc: View {
     var argsTable: [SwiftBookArgRow] { get }
     var controls: [[AnyView]] { get }
-    var stories: [AnyView] { get }
 }
 
 @available(iOS 13, macOS 10.15, *)
-public struct SwiftBook: View {
+public struct SwiftBook<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     
-    let docs: [SwiftBookDoc]
+    let content: Content
     let titles: [String]
-
-    @State var stories: [AnyView] = []
-    @State var selectedIndex = 0
-    
-    public init(docs: [SwiftBookDoc]) {
-        self.docs = docs
-        self.titles = docs.map { $0.title }
-    }
     
     let padding: CGFloat = 15
     let cornerRadius: CGFloat = 10
-
+    
+    public init(titles: [String], @ViewBuilder content: () -> Content) {
+        self.titles = titles
+        self.content = content()
+    }
+    
     public var body: some View {
-        if self.docs.count > selectedIndex {
-            let doc = self.docs[selectedIndex]
+        VStack {
             HStack {
-                VStack(alignment: .center) {
-                    List(0..<titles.count) { index in
-                        Text(titles[index])
-                            .padding(padding)
-                            .frame(width: navigationWidth - (padding * 2), alignment: .leading)
-                            .foregroundColor(selectedIndex == index ? .blue : .primary)
-                            .background(colorScheme == .dark ? Color(NSColor.underPageBackgroundColor) : Color.offWhite)
-                            .cornerRadius(cornerRadius)
-                            .onTapGesture {
-                                selectedIndex = index
-                                let doc = docs[index]
-                                stories = doc.stories
-                            }
-                    }
-                    
+               VStack(alignment: .center) {
+                   List(0..<titles.count) { index in
+                       Text(titles[index])
+                           .padding(padding)
+                           .frame(width: navigationWidth - (padding * 2), alignment: .leading)
+//                           .foregroundColor(selectedIndex == index ? .blue : .primary)
+                           .background(colorScheme == .dark ? Color(NSColor.underPageBackgroundColor) : Color.offWhite)
+                           .cornerRadius(cornerRadius)
+//                           .onTapGesture {
+//                               selectedIndex = index
+//                               let doc = docs[index]
+//                               stories = doc.stories
+//                           }
+                   }
+
+               }
+
+               .frame(maxWidth: navigationWidth)
+               VStack {
+                ScrollView(showsIndicators: false) {
+                    Spacer(minLength: 100)
+                    self.content
+                        .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
+                    Spacer(minLength: 100)
                 }
                 
-                .frame(maxWidth: navigationWidth)
-                VStack {
-                    SwiftBookCanvas(title: doc.title, description: doc.description, stories: $stories, controls: doc.controls, argsTable: doc.argsTable, selectedIndex: selectedIndex)
-                        .background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
-                }
-            }
-            .frame(minWidth: windowMinWidth, minHeight: windowMinHeight)
-            .onAppear(perform: {
-                self.stories = doc.stories
-            })
-            
+//                   SwiftBookCanvas(title: doc.title, description: doc.description, stories: $stories, controls: doc.controls, argsTable: doc.argsTable, selectedIndex: selectedIndex)
+                       .background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
+               }
+           }
+//            self.content
+//                .frame(width: 1000, height: 800)
         }
     }
 }
+//public struct SwiftBook<Content> where Content : View {
+//    @Environment(\.colorScheme) var colorScheme
+//
+//    let content: Content
+//    let titles: [String]
+//
+//    @State var stories: [AnyView] = []
+//    @State var selectedIndex = 0
+//
+//    public init(@ViewBuilder content: () -> Content) {
+//        self.content = content()
+//        self.titles = []
+////        self.titles = docs.map { $0.title }
+//    }
+//
+//    let padding: CGFloat = 15
+//    let cornerRadius: CGFloat = 10
+//
+//    public var body: some View {
+//        VStack {
+//            content
+//        }
+//
+////        if self.docs.count > selectedIndex {
+////            let doc = self.docs[selectedIndex]
+////            doc
+////            HStack {
+////                VStack(alignment: .center) {
+////                    List(0..<titles.count) { index in
+////                        Text(titles[index])
+////                            .padding(padding)
+////                            .frame(width: navigationWidth - (padding * 2), alignment: .leading)
+////                            .foregroundColor(selectedIndex == index ? .blue : .primary)
+////                            .background(colorScheme == .dark ? Color(NSColor.underPageBackgroundColor) : Color.offWhite)
+////                            .cornerRadius(cornerRadius)
+////                            .onTapGesture {
+////                                selectedIndex = index
+////                                let doc = docs[index]
+////                                stories = doc.stories
+////                            }
+////                    }
+////
+////                }
+////
+////                .frame(maxWidth: navigationWidth)
+////                VStack {
+////                    SwiftBookCanvas(title: doc.title, description: doc.description, stories: $stories, controls: doc.controls, argsTable: doc.argsTable, selectedIndex: selectedIndex)
+////                        .background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
+////                }
+////            }
+////            .frame(minWidth: windowMinWidth, minHeight: windowMinHeight)
+////            .onAppear(perform: {
+////                self.stories = doc
+////            })
+//
+////        }
+//    }
+//}
 
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookComponent<C: View> : View {
@@ -320,12 +375,12 @@ public struct SwiftBookArgRow: View {
 }
 
 public enum HeaderSize: CGFloat {
-    case h1 = 40
-    case h2 = 32
-    case h3 = 24
-    case h4 = 16
-    case h5 = 12
-    case h6 = 8
+    case h1 = 50
+    case h2 = 40
+    case h3 = 32
+    case h4 = 24
+    case h5 = 18
+    case h6 = 12
 }
 
 @available(iOS 13, macOS 10.15, *)
