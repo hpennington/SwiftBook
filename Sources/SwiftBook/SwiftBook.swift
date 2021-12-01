@@ -66,6 +66,7 @@ public struct SwiftBook<Content: View>: View {
                         .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
                     Spacer(minLength: 100)
                 }.background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
+                .id(selectedIndex)
                 
                }
            }.frame(minWidth: windowMinWidth, minHeight: windowMinHeight)
