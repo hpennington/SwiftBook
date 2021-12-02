@@ -26,6 +26,8 @@ public struct SwiftBook<Content: View>: View {
     
     @State private var selectedIndex = 0
     
+    @Binding var takeSnapshot: Bool
+    
     let content: Content
     let onNavChange: (_ document: String) -> ()
     let titles: [String]
@@ -33,10 +35,15 @@ public struct SwiftBook<Content: View>: View {
     let padding: CGFloat = 15
     let cornerRadius: CGFloat = 10
     
-    public init(titles: [String], onNavChange: @escaping (_ document: String) -> (), @ViewBuilder content: () -> Content) {
+    public init(takeSnapshot: Binding<Bool>, titles: [String], onNavChange: @escaping (_ document: String) -> (), @ViewBuilder content: () -> Content) {
+        self._takeSnapshot = takeSnapshot
         self.titles = titles
         self.onNavChange = onNavChange
         self.content = content()
+    }
+    
+    public func renderSnapshot() {
+        takeSnapshot = true
     }
     
     public var body: some View {
@@ -54,10 +61,12 @@ public struct SwiftBook<Content: View>: View {
                                 self.onNavChange(self.titles[index])
                                 self.selectedIndex = index
                            }
-                   }
-
+                    }
+                    Spacer()
+                    Button(action: renderSnapshot) {
+                        Text("Take Snapshot")
+                    }.padding()
                }
-
                .frame(maxWidth: navigationWidth)
                VStack {
                 ScrollView(showsIndicators: false) {
@@ -75,12 +84,23 @@ public struct SwiftBook<Content: View>: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
+public protocol SwiftBookDoc: View {
+    associatedtype SwiftBookStory
+}
+
+@available(iOS 13, macOS 10.15, *)
+public protocol SwiftBookStory : View {
+    associatedtype SwiftBookComponent
+    var component: SwiftBookComponent { get }
+}
+
+@available(iOS 13, macOS 10.15, *)
 public struct SwiftBookArgsTable<C: View> : View {
-  let component: C
-  
-  public init(_ component: () -> (C)) {
-    self.component = component()
-  }
+    let component: C
+
+    public init(_ component: () -> (C)) {
+        self.component = component()
+    }
   
     public var body: some View {
         VStack(alignment: .leading) {
@@ -93,18 +113,74 @@ public struct SwiftBookArgsTable<C: View> : View {
 }
 
 @available(iOS 13, macOS 10.15, *)
+public struct SwiftBookSnapshot<C: View>: View {
+    let component: C
+    @Binding var takeSnapshot: Bool
+    
+    public init(component: C, takeSnapshot: Binding<Bool>) {
+        self.component = component
+        self._takeSnapshot = takeSnapshot
+        
+        if let snapshot = self.component.renderAsImage() {
+            let url = FileManager().homeDirectoryForCurrentUser.appendingPathComponent(NSUUID().uuidString + ".png")
+            print(url)
+            snapshot.writePNG(toURL: url)
+        }
+    }
+    
+    public var body: some View {
+        HStack {
+            EmptyView()
+
+        }
+        .onAppear(perform: {
+            self.takeSnapshot = false
+        })
+    }
+}
+
+@available(macOS 10.15, *)
+public extension NSImage {
+    func writePNG(toURL url: URL) {
+
+        guard let data = tiffRepresentation,
+              let rep = NSBitmapImageRep(data: data),
+              let imgData = rep.representation(using: .png, properties: [.compressionFactor : NSNumber(floatLiteral: 1.0)]) else {
+
+            Swift.print("\(self) Error Function '\(#function)' Line: \(#line) No tiff rep found for image writing to \(url)")
+            return
+        }
+
+        do {
+            try imgData.write(to: url)
+        } catch let error {
+            Swift.print("\(self) Error Function '\(#function)' Line: \(#line) \(error.localizedDescription)")
+        }
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
 public struct SwiftBookComponent<C: View> : View {
-  let component: C
+    let component: C
+    
+    @Binding var takeSnapshot: Bool
   
-  public init(_ component: () -> (C)) {
-    self.component = component()
-  }
+    public init(takeSnapshot: Binding<Bool>, _ component: () -> (C)) {
+        self._takeSnapshot = takeSnapshot
+        self.component = component()
+    }
   
-  public var body: some View {
-    component
-        .frame(maxWidth: maxCanvasWidth, alignment: .center)
-        .padding()
-  }
+    public var body: some View {
+        HStack(alignment: .center) {
+            component
+                .frame(maxWidth: maxCanvasWidth, alignment: .center)
+                .padding()
+            if takeSnapshot {
+                SwiftBookSnapshot(component: self.component, takeSnapshot: $takeSnapshot)
+            }
+        }
+        
+    }
 }
 
 @available(iOS 13, macOS 10.15, *)
@@ -255,6 +331,38 @@ public struct SwiftBookArgRow: View {
         .cornerRadius(10.0)
     }
 }
+
+#if os(macOS)
+@available(macOS 10.15, *)
+class NoInsetHostingView<V>: NSHostingView<V> where V: View {
+    override var safeAreaInsets: NSEdgeInsets {
+        return .init()
+    }
+}
+
+@available(macOS 10.15, *)
+extension View {
+    func renderAsImage() -> NSImage? {
+        let view = NoInsetHostingView(rootView: self)
+        view.setFrameSize(NSSize(width: 1000, height: 1000))
+        return view.bitmapImage()
+    }
+}
+
+@available(macOS 10.15, *)
+public extension NSView {
+    func bitmapImage() -> NSImage? {
+        guard let rep = bitmapImageRepForCachingDisplay(in: bounds) else {
+            return nil
+        }
+        cacheDisplay(in: bounds, to: rep)
+        guard let cgImage = rep.cgImage else {
+            return nil
+        }
+        return NSImage(cgImage: cgImage, size: bounds.size)
+    }
+}
+#endif
 
 public enum HeaderSize: CGFloat {
     case h1 = 50
