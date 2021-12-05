@@ -114,14 +114,16 @@ public struct SwiftBookArgsTable<C: View> : View {
 
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookSnapshot<C: View>: View {
+    let frame: CGSize
     let component: C
     @Binding var takeSnapshot: Bool
     
-    public init(component: C, takeSnapshot: Binding<Bool>) {
+    public init(frame: CGSize, component: C, takeSnapshot: Binding<Bool>) {
         self.component = component
         self._takeSnapshot = takeSnapshot
+        self.frame = frame
         
-        if let snapshot = self.component.renderAsImage() {
+        if let snapshot = self.component.renderAsImage(frame: NSSize(width: frame.width, height: frame.height)) {
             let url = FileManager().homeDirectoryForCurrentUser.appendingPathComponent(NSUUID().uuidString + ".png")
             print(url)
             snapshot.writePNG(toURL: url)
@@ -161,12 +163,14 @@ public extension NSImage {
 
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookComponent<C: View> : View {
+    let frame: CGSize
     let component: C
     
     @Binding var takeSnapshot: Bool
   
-    public init(takeSnapshot: Binding<Bool>, _ component: () -> (C)) {
+    public init(takeSnapshot: Binding<Bool>, frame: CGSize, _ component: () -> (C)) {
         self._takeSnapshot = takeSnapshot
+        self.frame = frame
         self.component = component()
     }
   
@@ -176,7 +180,7 @@ public struct SwiftBookComponent<C: View> : View {
                 .frame(maxWidth: maxCanvasWidth, alignment: .center)
                 .padding()
             if takeSnapshot {
-                SwiftBookSnapshot(component: self.component, takeSnapshot: $takeSnapshot)
+                SwiftBookSnapshot(frame: frame, component: self.component, takeSnapshot: $takeSnapshot)
             }
         }
         
@@ -342,9 +346,9 @@ class NoInsetHostingView<V>: NSHostingView<V> where V: View {
 
 @available(macOS 10.15, *)
 extension View {
-    func renderAsImage() -> NSImage? {
+    func renderAsImage(frame: NSSize) -> NSImage? {
         let view = NoInsetHostingView(rootView: self)
-        view.setFrameSize(NSSize(width: 1000, height: 1000))
+        view.setFrameSize(frame)
         return view.bitmapImage()
     }
 }
