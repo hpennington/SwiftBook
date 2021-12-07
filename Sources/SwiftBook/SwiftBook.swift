@@ -84,17 +84,6 @@ public struct SwiftBook<Content: View>: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
-public protocol SwiftBookDoc: View {
-    associatedtype SwiftBookStory
-}
-
-@available(iOS 13, macOS 10.15, *)
-public protocol SwiftBookStory : View {
-    associatedtype SwiftBookComponent
-    var component: SwiftBookComponent { get }
-}
-
-@available(iOS 13, macOS 10.15, *)
 public struct SwiftBookArgsTable<C: View> : View {
     let component: C
 
