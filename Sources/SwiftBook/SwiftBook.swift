@@ -375,7 +375,7 @@ public struct SwiftBookControlDouble: View {
                 .frame(maxWidth: 400)
                 .fixedSize()
                 .onReceive(Just(text), perform: { newValue in
-                    self.text = newValue.filter { $0.isNumber }
+                    self.text = newValue.filter { $0.isNumber || $0 == "." }
                     if let value = Double(self.text) {
                         self.value = value
                     }
@@ -391,6 +391,9 @@ public enum SwiftBookArgType: String {
     case bool = "Bool"
     case color = "Color"
     case string = "String"
+    case int = "Int"
+    case float = "Float"
+    case double = "Double"
 }
 
 @available(iOS 13, macOS 10.15, *)
