@@ -18,6 +18,11 @@ extension Color {
     public static let offWhite = Color(red: 0.95, green: 0.95, blue: 0.95)
     public static let offBlack = Color(red: 0.05, green: 0.05, blue: 0.05)
     public static let darkBackground = Color(red: 0.1, green: 0.1, blue: 0.1)
+    #if os(macOS)
+    public static let underColor = Color(NSColor.underPageBackgroundColor)
+    #elseif os(iOS)
+    public static let underColor = Color(UIColor.systemBackground)
+    #endif
 }
 
 @available(iOS 13, macOS 10.15, *)
@@ -46,21 +51,30 @@ public struct SwiftBook<Content: View>: View {
         takeSnapshot = true
     }
     
+    struct NavButton: ButtonStyle {
+        let padding: CGFloat = 15
+        func makeBody(configuration: Configuration) -> some View {
+            configuration.label
+                .frame(width: navigationWidth - (padding * 2), alignment: .leading)
+        }
+    }
+    
     public var body: some View {
         VStack {
             HStack {
                VStack(alignment: .center) {
-                   List(0..<titles.count) { index in
-                       Text(titles[index])
-                           .padding(padding)
-                           .frame(width: navigationWidth - (padding * 2), alignment: .leading)
-                           .foregroundColor(selectedIndex == index ? .blue : .primary)
-                           .background(colorScheme == .dark ? Color(NSColor.underPageBackgroundColor) : Color.offWhite)
-                           .cornerRadius(cornerRadius)
-                           .onTapGesture {
-                                self.onNavChange(self.titles[index])
-                                self.selectedIndex = index
-                           }
+                    List(0..<titles.count) { index in
+                        Button(titles[index]) {
+                            self.onNavChange(self.titles[index])
+                            self.selectedIndex = index
+                        }
+                        .buttonStyle(NavButton())
+                        .cornerRadius(cornerRadius)
+                        .frame(width: navigationWidth - (padding * 2), alignment: .leading)
+                        .padding(padding)
+                        .foregroundColor(selectedIndex == index ? .blue : .primary)
+                        .background(colorScheme == .dark ? Color.underColor : Color.offWhite)
+                            
                     }
                     Spacer()
                     Button(action: renderSnapshot) {
@@ -111,12 +125,21 @@ public struct SwiftBookSnapshot<C: View>: View {
         self.component = component
         self._takeSnapshot = takeSnapshot
         self.frame = frame
-        
+        #if os(macOS)
         if let snapshot = self.component.renderAsImage(frame: NSSize(width: frame.width, height: frame.height)) {
             let url = FileManager().homeDirectoryForCurrentUser.appendingPathComponent(NSUUID().uuidString + ".png")
             print(url)
             snapshot.writePNG(toURL: url)
         }
+        #elseif os(iOS)
+        if let snapshot = self.component.renderAsImage(frame: CGSize(width: frame.width, height: frame.height)) {
+            print(snapshot)
+//            let url = FileManager().homeDirectoryForCurrentUser.appendingPathComponent(NSUUID().uuidString + ".png")
+//            print(url)
+//            snapshot.writePNG(toURL: url)
+        }
+        #endif
+
     }
     
     public var body: some View {
@@ -129,6 +152,8 @@ public struct SwiftBookSnapshot<C: View>: View {
         })
     }
 }
+
+#if os(macOS)
 
 @available(macOS 10.15, *)
 public extension NSImage {
@@ -149,6 +174,8 @@ public extension NSImage {
         }
     }
 }
+
+#endif
 
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookComponent<C: View> : View {
@@ -176,7 +203,8 @@ public struct SwiftBookComponent<C: View> : View {
     }
 }
 
-@available(iOS 13, macOS 10.15, *)
+#if os(macOS)
+@available(macOS 10.15, *)
 @objc final class ColorWell: NSObject, NSViewRepresentable {
     typealias NSViewType = NSColorWell
     
@@ -210,18 +238,22 @@ public struct SwiftBookComponent<C: View> : View {
         }
     }
 }
+#endif
 
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookControlColor: View {
     @Binding public var color: Color
     let title: String
     
+    #if os(macOS)
     @State var colorWell: ColorWell
-
+    #endif
     public init(color: Binding<Color>, title: String) {
         self._color = color
         self.title = title
+        #if os(macOS)
         self.colorWell = ColorWell(color: color)
+        #endif
     }
     
     public var body: some View {
@@ -231,7 +263,9 @@ public struct SwiftBookControlColor: View {
                 .foregroundColor(color)
                 .padding()
                 .onTapGesture {
+                    #if os(macOS)
                     colorWell.activate(active: true)
+                    #endif
                 }
             Spacer()
             Text(title)
@@ -355,16 +389,52 @@ public extension NSView {
         return NSImage(cgImage: cgImage, size: bounds.size)
     }
 }
+
+#elseif os(iOS)
+
+@available(iOS 13, *)
+extension View {
+    func renderAsImage(frame: CGSize) -> UIImage? {
+        let hostingController = UIHostingController(rootView: self)
+        let view = hostingController.view
+        view?.bounds = CGRect(origin: CGPoint(x: 0, y: 0), size: frame)
+        let targetSize = hostingController.view.intrinsicContentSize
+
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+
+        return renderer.image { _ in
+            if let view = view {
+                view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+            }
+        }
+    }
+}
+
 #endif
 
 public enum HeaderSize: CGFloat {
+    #if os(macOS)
     case h1 = 50
     case h2 = 40
     case h3 = 32
     case h4 = 24
     case h5 = 18
     case h6 = 12
+    #elseif os(iOS)
+    case h1 = 72
+    case h2 = 50
+    case h3 = 40
+    case h4 = 32
+    case h5 = 24
+    case h6 = 18
+    #endif
 }
+
+#if os(macOS)
+let ParagraphSize = 18
+#elseif os(iOS)
+let ParagraphSize = 24
+#endif
 
 @available(iOS 13, macOS 10.15, *)
 public struct H1: View {
@@ -487,7 +557,7 @@ public struct P: View {
             Text(text)
                 .frame(maxWidth: maxCanvasWidth, maxHeight: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
-                .font(.system(size: 18))
+                .font(.system(size: CGFloat(ParagraphSize)))
                 .padding()
                 
         }
