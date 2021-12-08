@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 let windowMinWidth: CGFloat = 1100
 let windowMinHeight: CGFloat = 700
@@ -315,6 +316,33 @@ public struct SwiftBookControlText: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .frame(maxWidth: 400)
                 .fixedSize()
+            Spacer()
+            Text(label)
+        }
+        
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
+public struct SwiftBookControlNumber: View {
+    @Binding var value: String
+    let label: String
+    
+    public init(value: Binding<String>, label: String) {
+        self._value = value
+        self.label = label
+    }
+    
+    public var body: some View {
+        VStack {
+            TextField(value, text: $value)
+                .padding()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .frame(maxWidth: 400)
+                .fixedSize()
+                .onReceive(Just(value), perform: { newValue in
+                    self.value = newValue.filter { $0.isNumber }
+                })
             Spacer()
             Text(label)
         }
