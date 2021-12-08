@@ -324,24 +324,61 @@ public struct SwiftBookControlText: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
-public struct SwiftBookControlNumber: View {
-    @Binding var value: String
+public struct SwiftBookControlInt: View {
+    @Binding var value: Int
+    @State private var text: String
     let label: String
     
-    public init(value: Binding<String>, label: String) {
+    public init(value: Binding<Int>, label: String) {
         self._value = value
         self.label = label
+        self.text = String(value.wrappedValue)
     }
     
     public var body: some View {
         VStack {
-            TextField(value, text: $value)
+            TextField(String(value), text: $text)
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .frame(maxWidth: 400)
                 .fixedSize()
-                .onReceive(Just(value), perform: { newValue in
-                    self.value = newValue.filter { $0.isNumber }
+                .onReceive(Just(text), perform: { newValue in
+                    self.text = newValue.filter { $0.isNumber }
+                    if let value = Int(self.text) {
+                        self.value = value
+                    }
+                })
+            Spacer()
+            Text(label)
+        }
+        
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
+public struct SwiftBookControlDouble: View {
+    @Binding var value: Double
+    @State private var text: String
+    let label: String
+    
+    public init(value: Binding<Double>, label: String) {
+        self._value = value
+        self.label = label
+        self.text = String(value.wrappedValue)
+    }
+    
+    public var body: some View {
+        VStack {
+            TextField(String(value), text: $text)
+                .padding()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .frame(maxWidth: 400)
+                .fixedSize()
+                .onReceive(Just(text), perform: { newValue in
+                    self.text = newValue.filter { $0.isNumber }
+                    if let value = Double(self.text) {
+                        self.value = value
+                    }
                 })
             Spacer()
             Text(label)
