@@ -124,27 +124,22 @@ public struct SwiftBookArgsTable<C: View> : View {
 
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookSnapshot<C: View>: View {
-    let frame: CGSize
     let component: C
-//    @Binding var takeSnapshot: Bool
     @EnvironmentObject var appModel: SwiftBookModel
     
-    public init(frame: CGSize, component: C) {
+    public init(component: C) {
         self.component = component
-//        self._takeSnapshot = takeSnapshot
-        self.frame = frame
+        
         #if os(macOS)
-        if let snapshot = self.component.renderAsImage(frame: NSSize(width: frame.width, height: frame.height)) {
+        if let snapshot = self.component.padding().renderAsImage() {
             let url = FileManager().homeDirectoryForCurrentUser.appendingPathComponent(NSUUID().uuidString + ".png")
             print(url)
             snapshot.writePNG(toURL: url)
         }
         #elseif os(iOS)
-        if let snapshot = self.component.renderAsImage(frame: CGSize(width: frame.width, height: frame.height)) {
+        if let snapshot = self.component.padding().renderAsImage() {
             print(snapshot)
-//            let url = FileManager().homeDirectoryForCurrentUser.appendingPathComponent(NSUUID().uuidString + ".png")
-//            print(url)
-//            snapshot.writePNG(toURL: url)
+            
         }
         #endif
 
@@ -156,7 +151,6 @@ public struct SwiftBookSnapshot<C: View>: View {
 
         }
         .onAppear(perform: {
-//            self.takeSnapshot = false
             self.appModel.takeSnapshot = false
         })
     }
@@ -188,12 +182,10 @@ public extension NSImage {
 
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookComponent<C: View> : View {
-    let frame: CGSize
     let component: C
     @EnvironmentObject var appModel: SwiftBookModel
     
-    public init(frame: CGSize, _ component: () -> (C)) {
-        self.frame = frame
+    public init(_ component: () -> (C)) {
         self.component = component()
     }
   
@@ -203,7 +195,7 @@ public struct SwiftBookComponent<C: View> : View {
                 .frame(maxWidth: maxCanvasWidth, alignment: .center)
                 .padding()
             if appModel.takeSnapshot {
-                SwiftBookSnapshot(frame: frame, component: self.component)
+                SwiftBookSnapshot(component: self.component)
             }
         }
         
@@ -437,15 +429,16 @@ public struct SwiftBookArgRow: View {
 @available(macOS 10.15, *)
 class NoInsetHostingView<V>: NSHostingView<V> where V: View {
     override var safeAreaInsets: NSEdgeInsets {
-        return .init()
+        .init()
     }
 }
 
 @available(macOS 10.15, *)
 extension View {
-    func renderAsImage(frame: NSSize) -> NSImage? {
+    func renderAsImage() -> NSImage? {
         let view = NoInsetHostingView(rootView: self)
-        view.setFrameSize(frame)
+        view.setFrameSize(view.fittingSize)
+        view.setFrameOrigin(NSPoint(x: -view.fittingSize.width / 2, y: -view.fittingSize.height / 2))
         return view.bitmapImage()
     }
 }
@@ -468,10 +461,10 @@ public extension NSView {
 
 @available(iOS 13, *)
 extension View {
-    func renderAsImage(frame: CGSize) -> UIImage? {
+    func renderAsImage() -> UIImage? {
         let hostingController = UIHostingController(rootView: self)
         let view = hostingController.view
-        view?.bounds = CGRect(origin: CGPoint(x: 0, y: 0), size: frame)
+        view?.sizeToFit()
         let targetSize = hostingController.view.intrinsicContentSize
 
         let renderer = UIGraphicsImageRenderer(size: targetSize)
