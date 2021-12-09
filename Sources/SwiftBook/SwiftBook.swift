@@ -27,12 +27,19 @@ extension Color {
 }
 
 @available(iOS 13, macOS 10.15, *)
+public final class SwiftBookModel: ObservableObject {
+    @Published var takeSnapshot: Bool = false
+    
+    public init() {
+        
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
 public struct SwiftBook<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
-    
+    @EnvironmentObject var appModel: SwiftBookModel
     @State private var selectedIndex = 0
-    
-    @Binding var takeSnapshot: Bool
     
     let content: Content
     let onNavChange: (_ document: String) -> ()
@@ -41,15 +48,14 @@ public struct SwiftBook<Content: View>: View {
     let padding: CGFloat = 15
     let cornerRadius: CGFloat = 10
     
-    public init(takeSnapshot: Binding<Bool>, titles: [String], onNavChange: @escaping (_ document: String) -> (), @ViewBuilder content: () -> Content) {
-        self._takeSnapshot = takeSnapshot
+    public init(titles: [String], onNavChange: @escaping (_ document: String) -> (), @ViewBuilder content: () -> Content) {
         self.titles = titles
         self.onNavChange = onNavChange
         self.content = content()
     }
     
     public func renderSnapshot() {
-        takeSnapshot = true
+        appModel.takeSnapshot = true
     }
     
     struct NavButton: ButtonStyle {
@@ -120,11 +126,12 @@ public struct SwiftBookArgsTable<C: View> : View {
 public struct SwiftBookSnapshot<C: View>: View {
     let frame: CGSize
     let component: C
-    @Binding var takeSnapshot: Bool
+//    @Binding var takeSnapshot: Bool
+    @EnvironmentObject var appModel: SwiftBookModel
     
-    public init(frame: CGSize, component: C, takeSnapshot: Binding<Bool>) {
+    public init(frame: CGSize, component: C) {
         self.component = component
-        self._takeSnapshot = takeSnapshot
+//        self._takeSnapshot = takeSnapshot
         self.frame = frame
         #if os(macOS)
         if let snapshot = self.component.renderAsImage(frame: NSSize(width: frame.width, height: frame.height)) {
@@ -149,7 +156,8 @@ public struct SwiftBookSnapshot<C: View>: View {
 
         }
         .onAppear(perform: {
-            self.takeSnapshot = false
+//            self.takeSnapshot = false
+            self.appModel.takeSnapshot = false
         })
     }
 }
@@ -182,11 +190,9 @@ public extension NSImage {
 public struct SwiftBookComponent<C: View> : View {
     let frame: CGSize
     let component: C
+    @EnvironmentObject var appModel: SwiftBookModel
     
-    @Binding var takeSnapshot: Bool
-  
-    public init(takeSnapshot: Binding<Bool>, frame: CGSize, _ component: () -> (C)) {
-        self._takeSnapshot = takeSnapshot
+    public init(frame: CGSize, _ component: () -> (C)) {
         self.frame = frame
         self.component = component()
     }
@@ -196,8 +202,8 @@ public struct SwiftBookComponent<C: View> : View {
             component
                 .frame(maxWidth: maxCanvasWidth, alignment: .center)
                 .padding()
-            if takeSnapshot {
-                SwiftBookSnapshot(frame: frame, component: self.component, takeSnapshot: $takeSnapshot)
+            if appModel.takeSnapshot {
+                SwiftBookSnapshot(frame: frame, component: self.component)
             }
         }
         
