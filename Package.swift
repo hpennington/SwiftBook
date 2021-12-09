@@ -13,7 +13,7 @@ let package = Package(
             targets: ["SwiftBook"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/chrs1885/SheetyColors.git", from: "1.2.1"),
+
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
