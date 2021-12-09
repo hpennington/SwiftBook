@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftBook",
+    platforms: [.iOS(.v13), .macOS(.v10_15)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
@@ -12,6 +13,7 @@ let package = Package(
             targets: ["SwiftBook"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/chrs1885/SheetyColors.git", from: "1.2.1"),
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
@@ -20,7 +22,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "SwiftBook",
-            dependencies: []),
+            dependencies: ["SheetyColors"]),
         .testTarget(
             name: "SwiftBookTests",
             dependencies: ["SwiftBook"]),

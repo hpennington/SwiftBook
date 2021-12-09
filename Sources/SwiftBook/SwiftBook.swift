@@ -239,6 +239,21 @@ public struct SwiftBookComponent<C: View> : View {
         }
     }
 }
+#elseif os(iOS)
+import SheetyColors
+
+@available(iOS 13, *)
+struct ColorWell: View {
+    @State var selectedColor: UIColor = UIColor.white
+    
+    let config = SheetyColorsConfig(alphaEnabled: true, hapticFeedbackEnabled: true, initialColor: UIColor.red, type: .rgb)
+
+    var body: some View {
+        Text("Select a color")
+            .foregroundColor(Color(self.$selectedColor.wrappedValue))
+        SheetyColorsView(config: config, color: self.$selectedColor)
+    }
+}
 #endif
 
 @available(iOS 13, macOS 10.15, *)
