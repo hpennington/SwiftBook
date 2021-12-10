@@ -105,11 +105,11 @@ public struct SwiftBook<Content: View>: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
-public struct SwiftBookArgsTable<C: View> : View {
-    let component: C
+public struct SwiftBookArgsTable<Content: View> : View {
+    let component: () -> Content
 
-    public init(_ component: () -> (C)) {
-        self.component = component()
+    public init(@ViewBuilder component: @escaping () -> Content) {
+        self.component = component
     }
   
     public var body: some View {
@@ -117,7 +117,7 @@ public struct SwiftBookArgsTable<C: View> : View {
             Text("Arguments")
                 .padding()
                 .font(.headline)
-            component
+            component()
         }
     }
 }
@@ -238,6 +238,21 @@ public struct SwiftBookComponent<C: View> : View {
     }
 }
 #endif
+
+@available(iOS 13, macOS 10.15, *)
+public struct SwiftBookControlTable<Content: View> : View {
+    let component: () -> Content
+
+    public init(@ViewBuilder component: @escaping () -> Content) {
+        self.component = component
+    }
+  
+    public var body: some View {
+        HStack {
+            self.component()
+        }.fixedSize()
+    }
+}
 
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookControlColor: View {
