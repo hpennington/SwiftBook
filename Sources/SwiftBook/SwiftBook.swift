@@ -27,30 +27,26 @@ extension Color {
 }
 
 @available(iOS 13, macOS 10.15, *)
-public final class SwiftBookModel: ObservableObject {
+private final class SwiftBookModel: ObservableObject {
     @Published var takeSnapshot: Bool = false
-    
-    public init() {
-        
-    }
 }
 
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBook<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var appModel: SwiftBookModel
+    @ObservedObject private var appModel = SwiftBookModel()
     @State private var selectedIndex = 0
+    @Binding var document: String
     
     let content: Content
-    let onNavChange: (_ document: String) -> ()
     let titles: [String]
     
     let padding: CGFloat = 15
     let cornerRadius: CGFloat = 10
     
-    public init(titles: [String], onNavChange: @escaping (_ document: String) -> (), @ViewBuilder content: () -> Content) {
+    public init(titles: [String], document: Binding<String>, @ViewBuilder content: () -> Content) {
         self.titles = titles
-        self.onNavChange = onNavChange
+        self._document = document
         self.content = content()
     }
     
@@ -72,7 +68,7 @@ public struct SwiftBook<Content: View>: View {
                VStack(alignment: .center) {
                     List(0..<titles.count) { index in
                         Button(titles[index]) {
-                            self.onNavChange(self.titles[index])
+                            self.document = self.titles[index]
                             self.selectedIndex = index
                         }
                         .buttonStyle(NavButton())
@@ -100,7 +96,7 @@ public struct SwiftBook<Content: View>: View {
                 
                }
            }.frame(minWidth: windowMinWidth, minHeight: windowMinHeight)
-        }
+        }.environmentObject(appModel)
     }
 }
 
@@ -125,7 +121,7 @@ public struct SwiftBookArgsTable<Content: View> : View {
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookSnapshot<C: View>: View {
     let component: C
-    @EnvironmentObject var appModel: SwiftBookModel
+    @EnvironmentObject private var appModel: SwiftBookModel
     
     public init(component: C) {
         self.component = component
@@ -183,7 +179,7 @@ public extension NSImage {
 @available(iOS 13, macOS 10.15, *)
 public struct SwiftBookComponent<C: View> : View {
     let component: C
-    @EnvironmentObject var appModel: SwiftBookModel
+    @EnvironmentObject private var appModel: SwiftBookModel
     
     public init(_ component: () -> (C)) {
         self.component = component()
