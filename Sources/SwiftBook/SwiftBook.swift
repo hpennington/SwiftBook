@@ -37,15 +37,6 @@ private final class SwiftBookModel: ObservableObject {
 }
 
 @available(iOS 13, macOS 10.15, *)
-private struct NavButton: ButtonStyle {
-    let padding: CGFloat = 5
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .frame(width: navigationWidth - (padding * 2), alignment: .leading)
-    }
-}
-
-@available(iOS 13, macOS 10.15, *)
 private struct SwiftBookNavButton: View {
     @Environment(\.colorScheme) var colorScheme
     private let title: String
@@ -64,7 +55,7 @@ private struct SwiftBookNavButton: View {
         Button(title, action: {
             self.action()
         })
-            .buttonStyle(NavButton())
+            .buttonStyle(PlainButtonStyle())
             .frame(width: navigationWidth - (padding * 2), alignment: .leading)
             .cornerRadius(cornerRadius)
             .padding(padding)
@@ -75,7 +66,7 @@ private struct SwiftBookNavButton: View {
         Button(title, action: {
             self.action()
         })
-            .buttonStyle(NavButton())
+            .buttonStyle(PlainButtonStyle())
             .frame(width: navigationWidth - (padding * 2), alignment: .leading)
             .cornerRadius(cornerRadius)
             .padding(padding)
