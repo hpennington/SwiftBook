@@ -10,9 +10,14 @@ import Combine
 
 let windowMinWidth: CGFloat = 1100
 let windowMinHeight: CGFloat = 700
-let navigationWidth: CGFloat = 200
 let maxCanvasWidth: CGFloat = 1000
 let argsTableWidth: CGFloat = 400
+
+#if os(macOS)
+let navigationWidth: CGFloat = 200
+#else
+let navigationWidth: CGFloat = 300
+#endif
 
 @available(iOS 13, macOS 10.15, *)
 extension Color {
@@ -170,9 +175,10 @@ public struct SwiftBook<Content: View>: View {
                     .id(selectedIndex)
                     
                    }
-               }.frame(minWidth: windowMinWidth, minHeight: windowMinHeight)
+               }
             }.environmentObject(appModel)
-        }
+            
+        }.frame(minWidth: windowMinWidth, minHeight: windowMinHeight)
     }
 }
 
