@@ -87,35 +87,48 @@ public struct SwiftBook<Content: View>: View {
     public func renderSnapshot() {
         appModel.takeSnapshot = true
     }
+    
+    public func navigation() -> some View {
+        VStack(alignment: .center) {
+             List(0..<titles.count) { index in
+                 SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
+                     self.document = self.titles[index]
+                     self.selectedIndex = index
+                 })
+             }
+             Spacer()
+             Button(action: renderSnapshot) {
+                 Text("Take Snapshot")
+             }.padding()
+             
+        }
+    }
 
     public var body: some View {
-        VStack {
-            HStack {
-               VStack(alignment: .center) {
-                    List(0..<titles.count) { index in
-                        SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
-                            self.document = self.titles[index]
-                            self.selectedIndex = index
-                        })
+        GeometryReader { geometry in
+            VStack {
+                HStack {
+                    if colorScheme == .light {
+                        navigation()
+                            .background(Color.white)
+                            .frame(maxWidth: navigationWidth, minHeight: geometry.size.height)
+                    } else {
+                        navigation()
+                            .frame(maxWidth: navigationWidth, minHeight: geometry.size.height)
                     }
-                    Spacer()
-                    Button(action: renderSnapshot) {
-                        Text("Take Snapshot")
-                    }.padding()
-               }
-               .frame(maxWidth: navigationWidth)
-               VStack {
-                ScrollView(showsIndicators: false) {
-                    Spacer(minLength: 100)
-                    self.content
-                        .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
-                    Spacer(minLength: 100)
-                }.background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
-                .id(selectedIndex)
-                
-               }
-           }.frame(minWidth: windowMinWidth, minHeight: windowMinHeight)
-        }.environmentObject(appModel)
+                   VStack {
+                    ScrollView(showsIndicators: false) {
+                        Spacer(minLength: 100)
+                        self.content
+                            .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
+                        Spacer(minLength: 100)
+                    }.background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
+                    .id(selectedIndex)
+                    
+                   }
+               }.frame(minWidth: windowMinWidth, minHeight: windowMinHeight)
+            }.environmentObject(appModel)
+        }
     }
 }
 
