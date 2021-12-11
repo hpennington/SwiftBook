@@ -32,6 +32,43 @@ private final class SwiftBookModel: ObservableObject {
 }
 
 @available(iOS 13, macOS 10.15, *)
+private struct NavButton: ButtonStyle {
+    let padding: CGFloat = 15
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(width: navigationWidth - (padding * 2), alignment: .leading)
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
+private struct SwiftBookNavButton: View {
+    @Environment(\.colorScheme) var colorScheme
+    private let title: String
+    private let selected: Bool
+    private let action: () -> Void
+    private let cornerRadius: CGFloat = 10
+    private let padding: CGFloat = 15
+    
+    init(_ title: String, selected: Bool, action: @escaping () -> Void) {
+        self.title = title
+        self.selected = selected
+        self.action = action
+    }
+    
+    var body: some View {
+        Button(title, action: {
+            self.action()
+        })
+            .buttonStyle(NavButton())
+            .frame(width: navigationWidth - (padding * 2), alignment: .leading)
+            .cornerRadius(cornerRadius)
+            .padding(padding)
+            .foregroundColor(self.selected ? .blue : .primary)
+            .background(colorScheme == .dark ? Color.underColor : Color.offWhite)
+    }
+}
+
+@available(iOS 13, macOS 10.15, *)
 public struct SwiftBook<Content: View>: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject private var appModel = SwiftBookModel()
@@ -40,10 +77,7 @@ public struct SwiftBook<Content: View>: View {
     
     let content: Content
     let titles: [String]
-    
-    let padding: CGFloat = 15
-    let cornerRadius: CGFloat = 10
-    
+   
     public init(titles: [String], document: Binding<String>, @ViewBuilder content: () -> Content) {
         self.titles = titles
         self._document = document
@@ -53,31 +87,16 @@ public struct SwiftBook<Content: View>: View {
     public func renderSnapshot() {
         appModel.takeSnapshot = true
     }
-    
-    struct NavButton: ButtonStyle {
-        let padding: CGFloat = 15
-        func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-                .frame(width: navigationWidth - (padding * 2), alignment: .leading)
-        }
-    }
-    
+
     public var body: some View {
         VStack {
             HStack {
                VStack(alignment: .center) {
                     List(0..<titles.count) { index in
-                        Button(titles[index]) {
+                        SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
                             self.document = self.titles[index]
                             self.selectedIndex = index
-                        }
-                        .buttonStyle(NavButton())
-                        .cornerRadius(cornerRadius)
-                        .frame(width: navigationWidth - (padding * 2), alignment: .leading)
-                        .padding(padding)
-                        .foregroundColor(selectedIndex == index ? .blue : .primary)
-                        .background(colorScheme == .dark ? Color.underColor : Color.offWhite)
-                            
+                        })
                     }
                     Spacer()
                     Button(action: renderSnapshot) {
