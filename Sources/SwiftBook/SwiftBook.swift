@@ -33,7 +33,7 @@ private final class SwiftBookModel: ObservableObject {
 
 @available(iOS 13, macOS 10.15, *)
 private struct NavButton: ButtonStyle {
-    let padding: CGFloat = 15
+    let padding: CGFloat = 5
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .frame(width: navigationWidth - (padding * 2), alignment: .leading)
@@ -47,14 +47,14 @@ private struct SwiftBookNavButton: View {
     private let selected: Bool
     private let action: () -> Void
     private let cornerRadius: CGFloat = 10
-    private let padding: CGFloat = 15
+    private let padding: CGFloat = 5
     
     init(_ title: String, selected: Bool, action: @escaping () -> Void) {
         self.title = title
         self.selected = selected
         self.action = action
     }
-    
+    #if os(macOS)
     var body: some View {
         Button(title, action: {
             self.action()
@@ -64,8 +64,19 @@ private struct SwiftBookNavButton: View {
             .cornerRadius(cornerRadius)
             .padding(padding)
             .foregroundColor(self.selected ? .blue : .primary)
-            .background(colorScheme == .dark ? Color.underColor : Color.offWhite)
     }
+    #else
+    var body: some View {
+        Button(title, action: {
+            self.action()
+        })
+            .buttonStyle(NavButton())
+            .frame(width: navigationWidth - (padding * 2), alignment: .leading)
+            .cornerRadius(cornerRadius)
+            .padding(padding)
+            .foregroundColor(self.selected ? .blue : .primary)
+    }
+    #endif
 }
 
 @available(iOS 13, macOS 10.15, *)
@@ -88,13 +99,34 @@ public struct SwiftBook<Content: View>: View {
         appModel.takeSnapshot = true
     }
     
-    public func navigation() -> some View {
+    public func navigationMac() -> some View {
         VStack(alignment: .center) {
-             List(0..<titles.count) { index in
-                 SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
-                     self.document = self.titles[index]
-                     self.selectedIndex = index
-                 })
+            List(0..<titles.count) { index in
+                VStack {
+                    SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
+                        self.document = self.titles[index]
+                        self.selectedIndex = index
+                    })
+                   Divider()
+                        .frame(width: navigationWidth, height: 0.5)
+                        .background(Color.black)
+                }
+             }
+             Spacer()
+             Button(action: renderSnapshot) {
+                 Text("Take Snapshot")
+             }.padding()
+             
+        }
+    }
+    
+    public func navigationIOS() -> some View {
+        VStack(alignment: .center) {
+            List(0..<titles.count) { index in
+                SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
+                    self.document = self.titles[index]
+                    self.selectedIndex = index
+                })
              }
              Spacer()
              Button(action: renderSnapshot) {
@@ -109,12 +141,24 @@ public struct SwiftBook<Content: View>: View {
             VStack {
                 HStack {
                     if colorScheme == .light {
-                        navigation()
+                        #if os(macOS)
+                        navigationMac()
                             .background(Color.white)
                             .frame(maxWidth: navigationWidth, minHeight: geometry.size.height)
-                    } else {
-                        navigation()
+                        #else
+                        navigationIOS()
+                            .background(Color.white)
                             .frame(maxWidth: navigationWidth, minHeight: geometry.size.height)
+                        #endif
+                        
+                    } else {
+                        #if os(macOS)
+                        navigationMac()
+                            .frame(maxWidth: navigationWidth, minHeight: geometry.size.height)
+                        #else
+                        navigationIOS()
+                            .frame(maxWidth: navigationWidth, minHeight: geometry.size.height)
+                        #endif
                     }
                    VStack {
                     ScrollView(showsIndicators: false) {
