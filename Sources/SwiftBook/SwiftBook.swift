@@ -10,13 +10,14 @@ import Combine
 
 let windowMinWidth: CGFloat = 1100
 let windowMinHeight: CGFloat = 700
-let maxCanvasWidth: CGFloat = 1000
 let argsTableWidth: CGFloat = 400
 
 #if os(macOS)
 let navigationWidth: CGFloat = 200
+let maxCanvasWidth: CGFloat = 1000
 #else
 let navigationWidth: CGFloat = 300
+let maxCanvasWidth: CGFloat = 1200
 #endif
 
 @available(iOS 13, macOS 10.15, *)
