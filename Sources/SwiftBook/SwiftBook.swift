@@ -77,19 +77,17 @@ private struct SwiftBookNavButton: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
-public struct SwiftBook<Content: View>: View {
+public struct SwiftBook: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject private var appModel = SwiftBookModel()
     @State private var selectedIndex = 0
-    @Binding var document: String
-    
-    let content: Content
+
     let titles: [String]
+    let documentsTable: [(String, AnyView)]
    
-    public init(titles: [String], document: Binding<String>, @ViewBuilder content: () -> Content) {
-        self.titles = titles
-        self._document = document
-        self.content = content()
+    public init(documentsTable: [(String, AnyView)]) {
+        self.documentsTable = documentsTable
+        self.titles = documentsTable.map { $0.0 }
     }
     
     public func renderSnapshot() {
@@ -101,7 +99,6 @@ public struct SwiftBook<Content: View>: View {
             List(0..<titles.count) { index in
                 VStack {
                     SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
-                        self.document = self.titles[index]
                         self.selectedIndex = index
                     })
                    Divider()
@@ -121,7 +118,6 @@ public struct SwiftBook<Content: View>: View {
         VStack(alignment: .center) {
             List(0..<titles.count) { index in
                 SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
-                    self.document = self.titles[index]
                     self.selectedIndex = index
                 })
              }
@@ -160,7 +156,7 @@ public struct SwiftBook<Content: View>: View {
                    VStack {
                     ScrollView(showsIndicators: false) {
                         Spacer(minLength: 100)
-                        self.content
+                        self.documentsTable[self.selectedIndex].1
                             .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
                         Spacer(minLength: 100)
                     }.background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
