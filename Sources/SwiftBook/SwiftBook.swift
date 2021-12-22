@@ -171,6 +171,11 @@ public struct SwiftBook: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
+protocol SwiftBookDocumentsTable: AnyObject {
+    var documentsTable: [(String, AnyView)] { get }
+}
+
+@available(iOS 13, macOS 10.15, *)
 public struct SwiftBookArgsTable<Content: View> : View {
     let component: () -> Content
 
