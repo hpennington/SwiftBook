@@ -85,9 +85,9 @@ public struct SwiftBook: View {
     let titles: [String]
     let documentsTable: [(String, AnyView)]
    
-    public init(documentsTable: [(String, AnyView)]) {
-        self.documentsTable = documentsTable
-        self.titles = documentsTable.map { $0.0 }
+    public init(documentsTable: SwiftBookDocumentsTable) {
+        self.documentsTable = documentsTable.documentsTable
+        self.titles = self.documentsTable.map { $0.0 }
     }
     
     public func renderSnapshot() {
@@ -171,7 +171,7 @@ public struct SwiftBook: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
-protocol SwiftBookDocumentsTable: AnyObject {
+public protocol SwiftBookDocumentsTable: AnyObject {
     var documentsTable: [(String, AnyView)] { get }
 }
 
