@@ -171,7 +171,7 @@ public struct SwiftBook: View {
 }
 
 @available(iOS 13, macOS 10.15, *)
-public protocol SwiftBookDocumentsTable: AnyObject {
+public protocol SwiftBookDocumentsTable: NSObjectProtocol {
     var documentsTable: [(String, AnyView)] { get }
 }
 
