@@ -83,11 +83,11 @@ public struct SwiftBook: View {
     @State private var selectedIndex = 0
 
     let titles: [String]
-    let documentsTable: [SwiftBookDocument]
+    let documentsTable: [(String, AnyView)]
    
-    public init(documentsTable: SwiftBookDocumentsTable) {
-        self.documentsTable = documentsTable.documentsTable
-        self.titles = self.documentsTable.map { $0.title }
+    public init(documentsTable: [(String, AnyView)]) {
+        self.documentsTable = documentsTable
+        self.titles = self.documentsTable.map { $0.0 }
     }
     
     public func renderSnapshot() {
@@ -156,7 +156,7 @@ public struct SwiftBook: View {
                    VStack {
                     ScrollView(showsIndicators: false) {
                         Spacer(minLength: 100)
-                        self.documentsTable[self.selectedIndex].view
+                        self.documentsTable[self.selectedIndex].1
                             .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
                         Spacer(minLength: 100)
                     }.background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
@@ -168,23 +168,6 @@ public struct SwiftBook: View {
             
         }.frame(minWidth: windowMinWidth, minHeight: windowMinHeight)
     }
-}
-
-@available(iOS 13, macOS 10.15, *)
-@objc public class SwiftBookDocument: NSObject {
-    public init(title: String, view: AnyView) {
-        self.title = title
-        self.view = view
-    }
-    
-    let title: String
-    let view: AnyView
-}
-
-@available(iOS 13, macOS 10.15, *)
-@objc public protocol SwiftBookDocumentsTable: NSObjectProtocol {
-    var documentsTable: [SwiftBookDocument] { get }
-    init()
 }
 
 @available(iOS 13, macOS 10.15, *)
