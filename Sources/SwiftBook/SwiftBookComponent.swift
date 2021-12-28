@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-public struct SwiftBookComponent<C: View> : View {
-    let component: C
+public struct SwiftBookComponent<Content: View> : View {
+    let component: Content
     @EnvironmentObject private var appModel: SwiftBookModel
     
-    public init(_ component: () -> (C)) {
+    public init(_ component: () -> (Content)) {
         self.component = component()
     }
   
