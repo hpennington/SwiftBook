@@ -19,17 +19,29 @@ struct SliderDoc: View {
         
     }
 }
-
-struct ContentView: View {
-    var body: some View {
-        SwiftBook([
-            ("Slider", AnyView(SliderDoc())),
-        ])
-    }
-}
-
-
 ```
 
+## An example demonstrating the controls table provided with SwiftUI
+
+```swift
+struct CircleRed: View {
+    @State private var color: Color = .red
+    @State private var label: String = "Red Circle"
+    @State private var labelColor: Color = .primary
+
+    var body: some View {
+        H2("A red circle")
+        H3("This is a description of a red circle.")
+        SwiftBookComponent {
+            CircleView(color: color, label: label, labelColor: labelColor)
+        }
+        SwiftBookControlTable {
+            SwiftBookControlColor(color: $color, title: "color")
+            SwiftBookControlColor(color: $labelColor, title: "labelColor")
+            SwiftBookControlText(text: $label, label: "label")
+        }
+    }
+}
+```
 
 ## Full example app at https://gitlab.com/haydenpennington/shapes.git
