@@ -26,7 +26,7 @@ struct SliderDoc: View {
 }
 ```
 
-## An example demonstrating the controls table provided with SwiftUI
+## An example demonstrating the `SwiftBookControlTable` provided with SwiftBook 
 
 ```swift
 struct CircleView: View {
