@@ -6,7 +6,7 @@ A Swift library for documenting, isolating, and testing SwiftUI components.
 An example demonstrated with the slider ui element.
 
 
-```Swift
+```swift
 struct SliderDoc: View {
     @State private var value: Double = 0.0
     
