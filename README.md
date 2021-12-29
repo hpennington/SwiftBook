@@ -31,7 +31,7 @@ struct SliderDoc: View {
     }
 }
 
-// In the main ContentView for the target.
+// Add your "doc" to the SwiftBook documents table.
 struct ContentView: View {
     var body: some View {
         SwiftBook([
