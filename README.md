@@ -1,4 +1,4 @@
-![alt text](https://raw.githubusercontent.com/hpennington/SwiftBook/master/AppIcons/swiftbook-logo_full_256px.png)
+![alt text](https://raw.githubusercontent.com/hpennington/SwiftBook/master/AppIcons/swiftbook-logo_200px.png)
 
 A Swift library for documenting, isolating, and testing SwiftUI, UIKit & AppKit components.
 
