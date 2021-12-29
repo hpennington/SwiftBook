@@ -27,7 +27,7 @@ public struct SwiftBook: View {
     let titles: [String]
     let documentsTable: [(String, AnyView)]
    
-    public init(documentsTable: [(String, AnyView)]) {
+    public init(_ documentsTable: [(String, AnyView)]) {
         self.documentsTable = documentsTable
         self.titles = self.documentsTable.map { $0.0 }
     }
