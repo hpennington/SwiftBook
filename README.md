@@ -2,7 +2,7 @@
 
 A Swift library for documenting, isolating, and testing SwiftUI, UIKit & AppKit components.
 
-![alt text](https://github.com/hpennington/SwiftBook/blob/master/AppIcons/logo_64_corner_radius.png?raw=true)
+![alt text](https://raw.githubusercontent.com/hpennington/SwiftBook/master/AppIcons/Assets.xcassets/AppIcon.appiconset/128.png)
 
 ![Swift](https://img.shields.io/badge/swift-F54A2A?style=for-the-badge&logo=swift&logoColor=white)
 ![Mac OS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)
