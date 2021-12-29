@@ -12,9 +12,15 @@ An example demonstrated with the `Slider` ui element.
 
 
 ```swift
+// Create a "doc" that conforms to View.
 struct SliderDoc: View {
     @State private var value: Double = 0.0
     
+    // Use the markup components provided with SwiftBook to 
+    // describe your components.
+    //
+    // Wrap your component in `SwiftBookComponent` to get the snapshot
+    // testing and more.
     var body: some View {
         H1("Slider")
         P("A Slider element provided by Apple for SwiftUI.")
@@ -22,6 +28,15 @@ struct SliderDoc: View {
             Slider(value: $value)
         }
         
+    }
+}
+
+// In the main ContentView for the target.
+struct ContentView: View {
+    var body: some View {
+        SwiftBook([
+            ("Slider", AnyView(SliderDoc())),
+        ])
     }
 }
 ```
