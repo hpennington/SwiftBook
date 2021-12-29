@@ -1,10 +1,15 @@
 import XCTest
 import SwiftUI
+import ViewInspector
 @testable import SwiftBook
+
+extension SwiftBook: Inspectable {}
+extension Text: Inspectable {}
+extension Button: Inspectable {}
     
 struct TestDoc: View {
     var body: some View {
-        Text("Docuemnt Stub")
+        Text("Test Document")
     }
 }
 
