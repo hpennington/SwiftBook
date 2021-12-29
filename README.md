@@ -67,4 +67,4 @@ struct CircleDoc: View {
 }
 ```
 
-## Full example app at https://gitlab.com/haydenpennington/shapes.git
+## Full example app at https://github.com/hpennington/shapes.git
