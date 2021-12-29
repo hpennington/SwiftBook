@@ -24,7 +24,24 @@ struct SliderDoc: View {
 ## An example demonstrating the controls table provided with SwiftUI
 
 ```swift
-struct CircleRed: View {
+struct CircleView: View {
+    let color: Color
+    let label: String
+    let labelColor: Color
+    
+    var body: some View {
+        ZStack {
+            Circle()
+                .frame(width: 300, height: 300, alignment: .center)
+                .foregroundColor(color)
+            Text(label)
+                .foregroundColor(labelColor)
+                .font(.headline)
+        }
+    }
+}
+
+struct CircleDoc: View {
     @State private var color: Color = .red
     @State private var label: String = "Red Circle"
     @State private var labelColor: Color = .primary
