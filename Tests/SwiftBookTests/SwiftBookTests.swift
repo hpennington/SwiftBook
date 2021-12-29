@@ -2,7 +2,7 @@ import XCTest
 import SwiftUI
 @testable import SwiftBook
     
-struct Doc: View {
+struct TestDoc: View {
     var body: some View {
         Text("Docuemnt Stub")
     }
@@ -10,18 +10,23 @@ struct Doc: View {
 
 final class SwiftBookTests: XCTestCase {
     func testInitEmpty() {
-        let swiftbook = SwiftBook([])
-        XCTAssert(swiftbook.documentsTable.count == 0)
+        let swiftBook = SwiftBook([])
+        XCTAssert(swiftBook.documentsTable.count == 0)
+        XCTAssert(swiftBook.titles.count == 0)
     }
     
     func testInitWithDocuments() {
-        let swiftbook = SwiftBook([("Doc", AnyView(Doc()))])
-        XCTAssert(swiftbook.documentsTable.count == 1)
-        XCTAssert(swiftbook.titles.count == 1)
+        let swiftBook = SwiftBook([
+            ("Doc1", AnyView(TestDoc())),
+            ("Doc2", AnyView(TestDoc())),
+            ("Doc3", AnyView(TestDoc())),
+        ])
+        XCTAssert(swiftBook.documentsTable.count == 3)
+        XCTAssert(swiftBook.titles.count == 3)
     }
     
     func testInitTakeSnapshotIsFalse() {
-        let swiftbook = SwiftBook([])
-        XCTAssert(swiftbook.appModel.takeSnapshot == false)
+        let swiftBook = SwiftBook([])
+        XCTAssert(swiftBook.appModel.takeSnapshot == false)
     }
 }
