@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SwiftBookSnapshot<Content: View>: View {
     let component: Content
-    @EnvironmentObject private var appModel: SwiftBookModel
+    @EnvironmentObject var appModel: SwiftBookModel
     
     public init(component: Content) {
         self.component = component

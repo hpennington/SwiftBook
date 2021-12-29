@@ -21,7 +21,7 @@ let maxCanvasWidth: CGFloat = 1200
 
 public struct SwiftBook: View {
     @Environment(\.colorScheme) var colorScheme
-    @ObservedObject private var appModel = SwiftBookModel()
+    @ObservedObject var appModel = SwiftBookModel()
     @State private var selectedIndex = 0
 
     let titles: [String]
