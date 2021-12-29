@@ -13,7 +13,6 @@ let package = Package(
             targets: ["SwiftBook"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/nalexn/ViewInspector.git", from: "0.9.0"),
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
@@ -25,6 +24,6 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "SwiftBookTests",
-            dependencies: ["SwiftBook", "ViewInspector"]),
+            dependencies: ["SwiftBook"]),
     ]
 )
