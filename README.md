@@ -8,7 +8,7 @@ A Swift library for documenting, isolating, and testing SwiftUI, UIKit & AppKit 
 ![Tests](https://github.com/hpennington/SwiftBook/actions/workflows/swift.yml/badge.svg)
 
 ## Minimal Example
-An example demonstrated with the slider ui element.
+An example demonstrated with the `Slider` ui element.
 
 
 ```swift
@@ -26,7 +26,7 @@ struct SliderDoc: View {
 }
 ```
 
-## An example demonstrating the `SwiftBookControlTable` provided with SwiftBook 
+## An example demonstrating the "controls" provided with SwiftBook 
 
 ```swift
 struct CircleView: View {
