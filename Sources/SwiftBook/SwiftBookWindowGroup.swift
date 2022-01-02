@@ -21,15 +21,11 @@ fileprivate struct HostingWindowFinder: UIViewRepresentable {
 
     func makeUIView(context: Context) -> UIView {
         let view = UIView()
-        DispatchQueue.main.async { [weak view] in
-            self.callback(view?.window)
-            
-        }
+        self.callback(view.window)
         return view
     }
 
-    func updateUIView(_ uiView: UIView, context: Context) {
-    }
+    func updateUIView(_ uiView: UIView, context: Context) {}
 }
 #endif
 
