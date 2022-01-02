@@ -34,8 +34,9 @@ public struct SwiftBook: View {
     
     public func navigationMac() -> some View {
         VStack(alignment: .center) {
+            
             if #available(iOS 14.0, *), #available(macOS 11.0, *) {
-                
+                Spacer(minLength: 60)
                 Picker("", selection: $selectedSegmentationIndex) {
                     Text("Docs")
                         .onTapGesture {
@@ -50,7 +51,7 @@ public struct SwiftBook: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding()
-                
+            
             }
             List(0..<titles.count) { index in
                 VStack {
