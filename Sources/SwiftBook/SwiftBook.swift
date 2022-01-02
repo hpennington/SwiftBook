@@ -70,8 +70,7 @@ public struct SwiftBook: View {
         }
     }
     
-    public func navigationIOS() -> some View {
-        #if targetEnvironment(macCatalyst)
+    private func _navigationIOS() -> some View {
         VStack(alignment: .center) {
             if #available(iOS 14.0, *), #available(macOS 11.0, *) {
                 Picker("", selection: $selectedSegmentationIndex) {
@@ -101,36 +100,14 @@ public struct SwiftBook: View {
              }.padding()
              
         }
+    }
+    
+    public func navigationIOS() -> some View {
+        #if targetEnvironment(macCatalyst)
+        self._navigationIOS()
         #else
-        VStack(alignment: .center) {
-            if #available(iOS 14.0, *), #available(macOS 11.0, *) {
-                Picker("", selection: $selectedSegmentationIndex) {
-                    Text("Docs")
-                        .onTapGesture {
-                            selectedSegmentationIndex = 0
-                        }
-                        .tag(0)
-                    Text("Tests")
-                        .onTapGesture {
-                            selectedSegmentationIndex = 1
-                        }
-                        .tag(1)
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
-            
-            }
-            List(0..<titles.count) { index in
-                SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
-                    self.selectedIndex = index
-                })
-             }
-             Spacer()
-             Button(action: renderSnapshot) {
-                 Text("Take Snapshot")
-             }.padding()
-             
-        }.padding([.top, .bottom])
+        self._navigationIOS()
+            .padding([.top, .bottom])
         #endif
     }
     
