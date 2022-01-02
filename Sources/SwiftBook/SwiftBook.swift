@@ -19,7 +19,7 @@ struct SwiftBookDocs: View {
     let selectedIndex: Int
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
+        ScrollView(showsIndicators: true) {
             Spacer(minLength: 100)
             if self.documentsTable.count > self.selectedIndex {
                 self.documentsTable[self.selectedIndex].1
