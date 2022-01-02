@@ -115,20 +115,20 @@ public struct SwiftBook: View {
                         #if os(macOS)
                         navigationMac()
                             .background(Color.white)
-                            .frame(maxWidth: navigationWidth, minHeight: geometry.size.height)
+                            .frame(width: navigationWidth, height: geometry.size.height)
                         #else
                         navigationIOS()
                             .background(Color.white)
-                            .frame(maxWidth: navigationWidth, minHeight: geometry.size.height)
+                            .frame(width: navigationWidth, height: geometry.size.height)
                         #endif
                         
                     } else {
                         #if os(macOS)
                         navigationMac()
-                            .frame(maxWidth: navigationWidth, minHeight: geometry.size.height)
+                            .frame(width: navigationWidth, height: geometry.size.height)
                         #else
                         navigationIOS()
-                            .frame(maxWidth: navigationWidth, minHeight: geometry.size.height)
+                            .frame(width: navigationWidth, height: geometry.size.height)
                         #endif
                     }
                    VStack {
@@ -145,9 +145,10 @@ public struct SwiftBook: View {
                     
                    }
                }
-            }.environmentObject(appModel)
-            
-        }.frame(minWidth: windowMinWidth, minHeight: windowMinHeight)
+            }
+            .environmentObject(appModel)
+        }
+        
     }
 }
 

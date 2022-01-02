@@ -16,7 +16,7 @@ struct SwiftBookDocs: View {
             Spacer(minLength: 100)
             if self.documentsTable.count > self.selectedIndex {
                 self.documentsTable[self.selectedIndex].1
-                    .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
+                    .frame(idealWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
             }
             Spacer(minLength: 100)
         }
