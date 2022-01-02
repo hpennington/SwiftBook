@@ -6,12 +6,38 @@
 //
 
 import SwiftUI
+import Combine
 
 let windowMinWidth: CGFloat = 1100
 let windowMinHeight: CGFloat = 700
 let argsTableWidth: CGFloat = 400
 let navigationWidth: CGFloat = 200
 let maxCanvasWidth: CGFloat = 1000
+
+struct SwiftBookDocs: View {
+    let documentsTable: [(String, AnyView)]
+    let selectedIndex: Int
+    
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            Spacer(minLength: 100)
+            if self.documentsTable.count > self.selectedIndex {
+                self.documentsTable[self.selectedIndex].1
+                    .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
+            }
+            Spacer(minLength: 100)
+        }
+    }
+}
+
+struct SwiftBookTests: View {
+    var body: some View {
+        ScrollView {
+            Text("Testing")
+                .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+}
 
 public struct SwiftBook: View {
     public init() {
@@ -22,6 +48,7 @@ public struct SwiftBook: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var appModel = SwiftBookModel()
     @State private var selectedIndex = 0
+    @State private var selectedSegmentationIndex = 0
 
     let titles: [String]
     public let documentsTable: [(String, AnyView)]
@@ -37,6 +64,24 @@ public struct SwiftBook: View {
     
     public func navigationMac() -> some View {
         VStack(alignment: .center) {
+            if #available(macCatalyst 14.0, *), #available(macOS 11.0, *) {
+                
+                    Picker("", selection: $selectedSegmentationIndex) {
+                        Text("Docs")
+                            .onTapGesture {
+                                selectedSegmentationIndex = 0
+                            }
+                            .tag(0)
+                        Text("Tests")
+                            .onTapGesture {
+                                selectedSegmentationIndex = 1
+                            }
+                            .tag(1)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding()
+             
+            }
             List(0..<titles.count) { index in
                 VStack {
                     SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
@@ -57,6 +102,23 @@ public struct SwiftBook: View {
     
     public func navigationIOS() -> some View {
         VStack(alignment: .center) {
+            if #available(macCatalyst 14.0, *), #available(macOS 11.0, *) {
+                Picker("", selection: $selectedSegmentationIndex) {
+                    Text("Docs")
+                        .onTapGesture {
+                            selectedSegmentationIndex = 0
+                        }
+                        .tag(0)
+                    Text("Tests")
+                        .onTapGesture {
+                            selectedSegmentationIndex = 1
+                        }
+                        .tag(1)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
+            
+            }
             List(0..<titles.count) { index in
                 SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
                     self.selectedIndex = index
@@ -95,13 +157,16 @@ public struct SwiftBook: View {
                         #endif
                     }
                    VStack {
-                    ScrollView(showsIndicators: false) {
-                        Spacer(minLength: 100)
-                        self.documentsTable[self.selectedIndex].1
-                            .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
-                        Spacer(minLength: 100)
-                    }.background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
-                    .id(selectedIndex)
+                    if selectedSegmentationIndex == 0 {
+                        SwiftBookDocs(documentsTable: documentsTable, selectedIndex: selectedIndex)
+                            .background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
+                            .id(selectedIndex)
+                    } else {
+                        SwiftBookTests()
+                            .background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
+                            .id(selectedIndex)
+                    }
+                    
                     
                    }
                }
