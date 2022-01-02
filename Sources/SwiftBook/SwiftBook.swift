@@ -15,11 +15,6 @@ let navigationWidth: CGFloat = 200
 let maxCanvasWidth: CGFloat = 1000
 
 public struct SwiftBook: View {
-    public init() {
-        self.titles = []
-        self.documentsTable = []
-    }
-    
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var appModel = SwiftBookModel()
     @State private var selectedIndex = 0
