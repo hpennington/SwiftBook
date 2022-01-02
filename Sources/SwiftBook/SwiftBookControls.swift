@@ -41,26 +41,24 @@ public struct SwiftBookControlColor: View {
     public var body: some View {
         VStack {
             
-                #if os(iOS)
-                if #available(iOS 14.0, *) {
-                    ColorPicker("", selection: $color)
-                        .frame(width: 45, height: 40)
-                        .padding()
-                } else {
-                    // TODO Implement UIKit Color Picker for iOS 13
-                }
-                #else
-            
-                Circle()
-                    .frame(width: 30, height: 30, alignment: .center)
-                    .foregroundColor(color)
+            #if os(iOS)
+            if #available(iOS 14.0, *) {
+                ColorPicker("", selection: $color)
+                    .frame(width: 45, height: 40)
                     .padding()
-                    .onTapGesture {
-                        #if os(macOS)
-                        colorWell.activate(active: true)
-                        #endif
-                    }
-                #endif
+            }
+            #else
+        
+            Circle()
+                .frame(width: 30, height: 30, alignment: .center)
+                .foregroundColor(color)
+                .padding()
+                .onTapGesture {
+                    #if os(macOS)
+                    colorWell.activate(active: true)
+                    #endif
+                }
+            #endif
             
             Spacer()
             Text(title)

@@ -8,28 +8,15 @@
 import SwiftUI
 
 public enum HeaderSize: CGFloat {
-    #if os(macOS)
     case h1 = 50
     case h2 = 40
     case h3 = 32
     case h4 = 24
     case h5 = 18
     case h6 = 12
-    #elseif os(iOS)
-    case h1 = 72
-    case h2 = 50
-    case h3 = 40
-    case h4 = 32
-    case h5 = 24
-    case h6 = 18
-    #endif
 }
 
-#if os(macOS)
 let ParagraphSize = 18
-#elseif os(iOS)
-let ParagraphSize = 24
-#endif
 
 public struct H1: View {
     let text: String?

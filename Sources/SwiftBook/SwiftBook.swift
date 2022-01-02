@@ -10,22 +10,21 @@ import SwiftUI
 let windowMinWidth: CGFloat = 1100
 let windowMinHeight: CGFloat = 700
 let argsTableWidth: CGFloat = 400
-
-#if os(macOS)
 let navigationWidth: CGFloat = 200
 let maxCanvasWidth: CGFloat = 1000
-#else
-let navigationWidth: CGFloat = 300
-let maxCanvasWidth: CGFloat = 1200
-#endif
 
 public struct SwiftBook: View {
+    public init() {
+        self.titles = []
+        self.documentsTable = []
+    }
+    
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var appModel = SwiftBookModel()
     @State private var selectedIndex = 0
 
     let titles: [String]
-    let documentsTable: [(String, AnyView)]
+    public let documentsTable: [(String, AnyView)]
    
     public init(_ documentsTable: [(String, AnyView)]) {
         self.documentsTable = documentsTable
