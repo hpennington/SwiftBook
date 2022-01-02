@@ -34,23 +34,23 @@ public struct SwiftBook: View {
     
     public func navigationMac() -> some View {
         VStack(alignment: .center) {
-            if #available(macCatalyst 14.0, *), #available(macOS 11.0, *) {
+            if #available(iOS 14.0, *), #available(macOS 11.0, *) {
                 
-                    Picker("", selection: $selectedSegmentationIndex) {
-                        Text("Docs")
-                            .onTapGesture {
-                                selectedSegmentationIndex = 0
-                            }
-                            .tag(0)
-                        Text("Tests")
-                            .onTapGesture {
-                                selectedSegmentationIndex = 1
-                            }
-                            .tag(1)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .padding()
-             
+                Picker("", selection: $selectedSegmentationIndex) {
+                    Text("Docs")
+                        .onTapGesture {
+                            selectedSegmentationIndex = 0
+                        }
+                        .tag(0)
+                    Text("Tests")
+                        .onTapGesture {
+                            selectedSegmentationIndex = 1
+                        }
+                        .tag(1)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
+                
             }
             List(0..<titles.count) { index in
                 VStack {
@@ -72,7 +72,7 @@ public struct SwiftBook: View {
     
     public func navigationIOS() -> some View {
         VStack(alignment: .center) {
-            if #available(macCatalyst 14.0, *), #available(macOS 11.0, *) {
+            if #available(iOS 14.0, *), #available(macOS 11.0, *) {
                 Picker("", selection: $selectedSegmentationIndex) {
                     Text("Docs")
                         .onTapGesture {
