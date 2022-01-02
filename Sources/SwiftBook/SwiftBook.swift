@@ -14,31 +14,6 @@ let argsTableWidth: CGFloat = 400
 let navigationWidth: CGFloat = 200
 let maxCanvasWidth: CGFloat = 1000
 
-struct SwiftBookDocs: View {
-    let documentsTable: [(String, AnyView)]
-    let selectedIndex: Int
-    
-    var body: some View {
-        ScrollView(showsIndicators: true) {
-            Spacer(minLength: 100)
-            if self.documentsTable.count > self.selectedIndex {
-                self.documentsTable[self.selectedIndex].1
-                    .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
-            }
-            Spacer(minLength: 100)
-        }
-    }
-}
-
-struct SwiftBookTests: View {
-    var body: some View {
-        ScrollView {
-            Text("Testing")
-                .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
-        }
-    }
-}
-
 public struct SwiftBook: View {
     public init() {
         self.titles = []
