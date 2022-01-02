@@ -71,6 +71,7 @@ public struct SwiftBook: View {
     }
     
     public func navigationIOS() -> some View {
+        #if targetEnvironment(macCatalyst)
         VStack(alignment: .center) {
             if #available(iOS 14.0, *), #available(macOS 11.0, *) {
                 Picker("", selection: $selectedSegmentationIndex) {
@@ -100,9 +101,40 @@ public struct SwiftBook: View {
              }.padding()
              
         }
+        #else
+        VStack(alignment: .center) {
+            if #available(iOS 14.0, *), #available(macOS 11.0, *) {
+                Picker("", selection: $selectedSegmentationIndex) {
+                    Text("Docs")
+                        .onTapGesture {
+                            selectedSegmentationIndex = 0
+                        }
+                        .tag(0)
+                    Text("Tests")
+                        .onTapGesture {
+                            selectedSegmentationIndex = 1
+                        }
+                        .tag(1)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
+            
+            }
+            List(0..<titles.count) { index in
+                SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
+                    self.selectedIndex = index
+                })
+             }
+             Spacer()
+             Button(action: renderSnapshot) {
+                 Text("Take Snapshot")
+             }.padding()
+             
+        }.padding([.top, .bottom])
+        #endif
     }
-
-    public var body: some View {
+    
+    func swiftBook() -> some View {
         GeometryReader { geometry in
             VStack {
                 HStack {
@@ -127,23 +159,29 @@ public struct SwiftBook: View {
                         #endif
                     }
                    VStack {
-                    if selectedSegmentationIndex == 0 {
-                        SwiftBookDocs(documentsTable: documentsTable, selectedIndex: selectedIndex)
-                            .background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
-                            .id(selectedIndex)
-                    } else {
-                        SwiftBookTests()
-                            .background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
-                            .id(selectedIndex)
-                    }
-                    
-                    
+                        if selectedSegmentationIndex == 0 {
+                            SwiftBookDocs(documentsTable: documentsTable, selectedIndex: selectedIndex)
+                                .background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
+                                .id(selectedIndex)
+                        } else {
+                            SwiftBookTests()
+                                .background(colorScheme == .dark ? Color.darkBackground : Color.offWhite)
+                                .id(selectedIndex)
+                        }
                    }
                }
             }
             .environmentObject(appModel)
         }
-        
+    }
+
+    public var body: some View {
+        #if targetEnvironment(macCatalyst)
+        self.swiftBook()
+        #else
+        self.swiftBook()
+            .edgesIgnoringSafeArea([.top, .bottom])
+        #endif
     }
 }
 

@@ -9,9 +9,11 @@ import SwiftUI
 
 struct SwiftBookTests: View {
     var body: some View {
-        ScrollView {
-            Text("Testing")
-                .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, maxHeight: .infinity)
+        GeometryReader { geometry in
+            ScrollView {
+                Text("Testing")
+                    .frame(minWidth: maxCanvasWidth - navigationWidth, maxWidth: .infinity, minHeight: geometry.size.height, maxHeight: .infinity)
+            }
         }
     }
 }
