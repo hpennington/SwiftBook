@@ -34,9 +34,11 @@ struct SliderDoc: View {
 // Add your "doc" to the SwiftBook documents table.
 struct ContentView: View {
     var body: some View {
-        SwiftBook([
-            ("Slider", AnyView(SliderDoc())),
-        ])
+        SwiftBookWindowGroup {
+            SwiftBook([
+                ("Slider", AnyView(SliderDoc())),
+            ])
+        }
     }
 }
 ```
