@@ -7,6 +7,53 @@
 
 import SwiftUI
 
+#if os(macOS)
+
+final class VerticalScrollingFixHostingView<Content: View>: NSHostingView<Content> {
+    override func wantsForwardedScrollEvents(for axis: NSEvent.GestureAxis) -> Bool {
+        return axis == .vertical
+    }
+}
+
+struct VerticalScrollingFixViewRepresentable<Content: View>: NSViewRepresentable {
+  
+    let content: Content
+
+    func makeNSView(context: Context) -> NSHostingView<Content> {
+        return VerticalScrollingFixHostingView<Content>(rootView: content)
+    }
+
+    func updateNSView(_ nsView: NSHostingView<Content>, context: Context) {
+        nsView.rootView = content
+    }
+
+}
+
+struct VerticalScrollingFixWrapper<Content: View>: View {
+
+    let content: () -> Content
+
+    init(@ViewBuilder content: @escaping () -> Content) {
+        self.content = content
+    }
+
+    var body: some View {
+        VerticalScrollingFixViewRepresentable(content: self.content())
+    }
+}
+#endif
+
+extension View {
+    @ViewBuilder
+    func workaroundForVerticalScrollingBugInMacOS() -> some View {
+    #if os(macOS)
+        VerticalScrollingFixWrapper { self }
+    #else
+        self
+    #endif
+    }
+}
+
 public struct SwiftBookComponent<Content: View> : View {
     let component: Content
     @EnvironmentObject private var appModel: SwiftBookModel
@@ -17,13 +64,18 @@ public struct SwiftBookComponent<Content: View> : View {
   
     public var body: some View {
         HStack(alignment: .center) {
-            component
-                .frame(maxWidth: maxCanvasWidth, alignment: .center)
-                .padding()
-            if appModel.takeSnapshot {
-                SwiftBookSnapshot(component: self.component)
+            ScrollView(.horizontal) {
+                component
+                    .padding()
             }
-        }
+            .frame(maxWidth: maxCanvasWidth)
+            .fixedSize()
+            .workaroundForVerticalScrollingBugInMacOS()
+        }.frame(maxWidth: maxCanvasWidth)
         
+        if appModel.takeSnapshot {
+            SwiftBookSnapshot(component: self.component)
+        }
     }
 }
+
