@@ -9,6 +9,9 @@ A Swift library for documenting, isolating, and testing SwiftUI, UIKit & AppKit 
 
 ![alt text](https://raw.githubusercontent.com/hpennington/SwiftBook/master/swiftbook.gif)
 
+## Dark Mode
+![alt text](https://raw.githubusercontent.com/hpennington/SwiftBook/master/darkmode.png)
+
 ## Minimal Example
 An example demonstrated with the `Slider` ui element.
 
