@@ -12,6 +12,8 @@ A Swift library for documenting, isolating, and testing SwiftUI, UIKit & AppKit 
 ## Dark Mode
 ![alt text](https://raw.githubusercontent.com/hpennington/SwiftBook/master/darkmode.png)
 
+## Full example app at https://github.com/hpennington/shapes.git
+
 ## Minimal Example
 An example demonstrated with the `Slider` ui element.
 
@@ -89,4 +91,3 @@ struct CircleDoc: View {
 }
 ```
 
-## Full example app at https://github.com/hpennington/shapes.git
