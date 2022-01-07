@@ -17,7 +17,11 @@ public struct SwiftBookControlTable<Content: View> : View {
   
     public var body: some View {
         HStack {
-            self.component()
+            ScrollView(.horizontal) {
+                HStack {
+                    self.component()
+                }
+            }.frame(maxWidth: 400)
         }.fixedSize()
     }
 }
