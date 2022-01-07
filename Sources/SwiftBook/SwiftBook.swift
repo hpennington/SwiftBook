@@ -12,6 +12,7 @@ let windowMinWidth: CGFloat = 1100
 let windowMinHeight: CGFloat = 700
 let argsTableWidth: CGFloat = 400
 let navigationWidth: CGFloat = 200
+let maxCanvasWidthIPadPortrait: CGFloat = 400
 let maxCanvasWidth: CGFloat = 1000
 
 public struct SwiftBook: View {

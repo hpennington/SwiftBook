@@ -54,6 +54,21 @@ extension View {
     }
 }
 
+struct Device {
+    let iPad: Bool
+    let portrait: Bool
+    
+    init() {
+        #if os(iOS)
+        self.iPad = UIDevice.current.userInterfaceIdiom == .pad
+        self.portrait = UIDevice.current.orientation == .portrait
+        #else
+        self.iPad = false
+        self.portrait = false
+        #endif
+    }
+}
+
 public struct SwiftBookComponent<Content: View> : View {
     let component: Content
     @EnvironmentObject private var appModel: SwiftBookModel
@@ -68,7 +83,7 @@ public struct SwiftBookComponent<Content: View> : View {
                 component
                     .padding()
             }
-            .frame(maxWidth: maxCanvasWidth)
+            .frame(maxWidth: Device().iPad && Device().portrait ? maxCanvasWidthIPadPortrait : maxCanvasWidth)
             .fixedSize()
             .workaroundForVerticalScrollingBugInMacOS()
         }.frame(maxWidth: maxCanvasWidth)
