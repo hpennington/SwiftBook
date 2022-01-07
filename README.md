@@ -7,6 +7,8 @@ A Swift library for documenting, isolating, and testing SwiftUI, UIKit & AppKit 
 ![IOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white)
 ![Tests](https://github.com/hpennington/SwiftBook/actions/workflows/swift.yml/badge.svg)
 
+![alt text](https://raw.githubusercontent.com/hpennington/SwiftBook/master/swiftbook.png)
+
 ## Minimal Example
 An example demonstrated with the `Slider` ui element.
 
