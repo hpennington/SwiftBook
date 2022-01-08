@@ -73,7 +73,7 @@ struct Device {
 public struct SwiftBookComponent<Content: View> : View {
     let component: Content
     @EnvironmentObject private var appModel: SwiftBookModel
-    let COMPONENT_MAX_HEIGHT = 400
+    let COMPONENT_MAX_HEIGHT: CGFloat = 400
     
     public init(_ component: () -> (Content)) {
         self.component = component()
