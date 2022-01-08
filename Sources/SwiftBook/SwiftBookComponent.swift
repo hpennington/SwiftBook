@@ -80,10 +80,11 @@ public struct SwiftBookComponent<Content: View> : View {
   
     public var body: some View {
         HStack(alignment: .center) {
-            ScrollView(.horizontal) {
+            ScrollView([.horizontal, .vertical]) {
                 component
                     .padding()
             }
+            .frame(height: 400)
             .frame(maxWidth: Device().iPad && Device().portrait ? maxCanvasWidthIPadPortrait : maxCanvasWidth)
             .fixedSize()
             .workaroundForVerticalScrollingBugInMacOS()
