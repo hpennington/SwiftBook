@@ -24,6 +24,8 @@ struct VerticalScrollingFixViewRepresentable<Content: View>: NSViewRepresentable
 
     func updateNSView(_ nsView: NSHostingView<Content>, context: Context) {
         nsView.rootView = content
+        nsView.setFrameSize(nsView.intrinsicContentSize)
+        nsView.setBoundsSize(nsView.intrinsicContentSize)
     }
 }
 
