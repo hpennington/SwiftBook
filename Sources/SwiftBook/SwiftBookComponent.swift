@@ -16,7 +16,6 @@ final class VerticalScrollingFixHostingView<Content: View>: NSHostingView<Conten
 }
 
 struct VerticalScrollingFixViewRepresentable<Content: View>: NSViewRepresentable {
-  
     let content: Content
 
     func makeNSView(context: Context) -> NSHostingView<Content> {
@@ -26,11 +25,9 @@ struct VerticalScrollingFixViewRepresentable<Content: View>: NSViewRepresentable
     func updateNSView(_ nsView: NSHostingView<Content>, context: Context) {
         nsView.rootView = content
     }
-
 }
 
 struct VerticalScrollingFixWrapper<Content: View>: View {
-
     let content: () -> Content
 
     init(@ViewBuilder content: @escaping () -> Content) {
@@ -41,16 +38,17 @@ struct VerticalScrollingFixWrapper<Content: View>: View {
         VerticalScrollingFixViewRepresentable(content: self.content())
     }
 }
+
 #endif
 
 extension View {
     @ViewBuilder
     func workaroundForVerticalScrollingBugInMacOS() -> some View {
-    #if os(macOS)
+        #if os(macOS)
         VerticalScrollingFixWrapper { self }
-    #else
+        #else
         self
-    #endif
+        #endif
     }
 }
 
