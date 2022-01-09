@@ -31,7 +31,7 @@ struct SliderDoc: View {
     var body: some View {
         H1("Slider")
         P("A Slider element provided by Apple for SwiftUI.")
-        SwiftBookComponent {
+        Component {
             Slider(value: $value)
         }
         
@@ -94,13 +94,13 @@ struct CircleDoc: View {
     var body: some View {
         H2("A red circle")
         H3("This is a description of a red circle.")
-        SwiftBookComponent {
+        Component {
             CircleView(color: color, label: label, labelColor: labelColor)
         }
-        SwiftBookControlTable {
-            SwiftBookControlColor(color: $color, title: "color")
-            SwiftBookControlColor(color: $labelColor, title: "labelColor")
-            SwiftBookControlText(text: $label, label: "label")
+        ControlsTable {
+            ControlColor(color: $color, title: "color")
+            ControlColor(color: $labelColor, title: "labelColor")
+            ControlText(text: $label, label: "label")
         }
     }
 }
