@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  SwiftBookWindowGroup.swift
 //  
 //
 //  Created by Hayden Pennington on 1/1/22.
