@@ -58,11 +58,6 @@ struct SwiftBookApp: App {
 struct SliderDoc: View {
     @State private var value: Double = 0.0
     
-    // Use the markup components provided with SwiftBook to 
-    // describe your components.
-    //
-    // Wrap your component in `SwiftBookComponent` to get the snapshot
-    // testing and more.
     var body: some View {
         Bookable(title: "Slider", detail: "A slider element provded by Apple for SwiftUI.") {
             Slider(value: $value)
