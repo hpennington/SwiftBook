@@ -1,13 +1,13 @@
 //
-//  SwiftBookArgsTable.swift
+//  ArgumentRow.swift
 //  
 //
-//  Created by Hayden Pennington on 12/26/21.
+//  Created by Hayden Pennington on 1/9/22.
 //
 
 import SwiftUI
 
-public enum SwiftBookArgType: String {
+public enum ArgumentType: String {
     case bool = "Bool"
     case color = "Color"
     case string = "String"
@@ -16,31 +16,14 @@ public enum SwiftBookArgType: String {
     case double = "Double"
 }
 
-public struct SwiftBookArgsTable<Content: View> : View {
-    let component: () -> Content
-
-    public init(@ViewBuilder component: @escaping () -> Content) {
-        self.component = component
-    }
-  
-    public var body: some View {
-        VStack(alignment: .leading) {
-            Text("Arguments")
-                .padding()
-                .font(.headline)
-            component()
-        }
-    }
-}
-
-public struct SwiftBookArgRow: View {
+public struct ArgumentRow: View {
     @Environment(\.colorScheme) var colorScheme
     
     public let title: String
     public let description: String
-    public let type: SwiftBookArgType
+    public let type: ArgumentType
     
-    public init(title: String, description: String, type: SwiftBookArgType) {
+    public init(title: String, description: String, type: ArgumentType) {
         self.title = title
         self.description = description
         self.type = type

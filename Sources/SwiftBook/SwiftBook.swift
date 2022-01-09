@@ -56,7 +56,7 @@ public struct SwiftBook: View {
             }
             List(0..<titles.count) { index in
                 VStack {
-                    SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
+                    NavigationButton(titles[index], selected: selectedIndex == index, action: {
                         self.selectedIndex = index
                     })
                    Divider()
@@ -92,7 +92,7 @@ public struct SwiftBook: View {
             
             }
             List(0..<titles.count) { index in
-                SwiftBookNavButton(titles[index], selected: selectedIndex == index, action: {
+                NavigationButton(titles[index], selected: selectedIndex == index, action: {
                     self.selectedIndex = index
                 })
              }

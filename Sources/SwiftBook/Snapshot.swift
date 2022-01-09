@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SwiftBookSnapshot<Content: View>: View {
+struct Snapshot<Content: View>: View {
     let component: Content
     @EnvironmentObject var appModel: SwiftBookModel
     

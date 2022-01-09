@@ -70,7 +70,7 @@ struct Device {
     }
 }
 
-public struct SwiftBookComponent<Content: View> : View {
+public struct Component<Content: View> : View {
     let component: Content
     @EnvironmentObject private var appModel: SwiftBookModel
     let COMPONENT_MAX_HEIGHT: CGFloat = 400
@@ -101,7 +101,7 @@ public struct SwiftBookComponent<Content: View> : View {
         }.frame(maxWidth: maxCanvasWidth)
         
         if appModel.takeSnapshot {
-            SwiftBookSnapshot(component: self.component)
+            Snapshot(component: self.component)
         }
     }
 }

@@ -21,7 +21,7 @@ public struct Bookable<Content: View>: View {
     public var body: some View {
         H2(title)
         P(detail)
-        SwiftBookComponent {
+        Component {
             component
         }
     }

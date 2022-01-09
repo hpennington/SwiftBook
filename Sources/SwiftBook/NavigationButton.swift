@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SwiftBookNavButton: View {
+struct NavigationButton: View {
     @Environment(\.colorScheme) var colorScheme
     private let title: String
     private let selected: Bool

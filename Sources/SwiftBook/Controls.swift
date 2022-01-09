@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-public struct SwiftBookControlTable<Content: View> : View {
+public struct ControlsTable<Content: View> : View {
     let component: () -> Content
 
     public init(@ViewBuilder component: @escaping () -> Content) {
@@ -26,7 +26,7 @@ public struct SwiftBookControlTable<Content: View> : View {
     }
 }
 
-public struct SwiftBookControlColor: View {
+public struct ControlColor: View {
     @Binding public var color: Color
     let title: String
     
@@ -72,7 +72,7 @@ public struct SwiftBookControlColor: View {
     }
 }
 
-public struct SwiftBookControlToggle: View {
+public struct ControlToggle: View {
     @Binding public var active: Bool
     let title: String
     
@@ -95,7 +95,7 @@ public struct SwiftBookControlToggle: View {
     }
 }
 
-public struct SwiftBookControlText: View {
+public struct ControlText: View {
     @Binding var text: String
     let label: String
     
@@ -118,7 +118,7 @@ public struct SwiftBookControlText: View {
     }
 }
 
-public struct SwiftBookControlInt: View {
+public struct ControlInt: View {
     @Binding var value: Int
     @State private var text: String
     let label: String
@@ -149,7 +149,7 @@ public struct SwiftBookControlInt: View {
     }
 }
 
-public struct SwiftBookControlDouble: View {
+public struct ControlDouble: View {
     @Binding var value: Double
     @State private var text: String
     let label: String

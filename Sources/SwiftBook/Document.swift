@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct SwiftBookDoc<Content: View>: View {
+public struct Document<Content: View>: View {
     let title: String
     let detail: String
     let content: Content
