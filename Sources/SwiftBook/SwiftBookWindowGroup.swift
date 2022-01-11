@@ -48,7 +48,7 @@ public struct SwiftBookWindowGroup<Content: View>: Scene {
         WindowGroup {
             self.content
                 .toolbar {
-                    Text("SwifttBook")
+                    Text("SwiftBook")
                 }
         }.windowStyle(DefaultWindowStyle())
     
