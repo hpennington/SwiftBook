@@ -16,6 +16,11 @@ public enum ArgumentType: String {
     case double = "Double"
 }
 
+public enum ArgumentRowDimensions: CGFloat {
+    case width = 400
+    case cornerRadius = 10
+}
+
 public struct ArgumentRow: View {
     @Environment(\.colorScheme) var colorScheme
     
@@ -38,10 +43,10 @@ public struct ArgumentRow: View {
             Text(description)
             Spacer()
         }
-        .frame(width: 400, alignment: .leading)
+        .frame(width: ArgumentRowDimensions.width.rawValue, alignment: .leading)
         .padding()
         .background(colorScheme == .dark ? Color.offBlack : .white)
         .foregroundColor(Color.primary)
-        .cornerRadius(10.0)
+        .cornerRadius(ArgumentRowDimensions.cornerRadius.rawValue)
     }
 }

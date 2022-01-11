@@ -8,6 +8,14 @@
 import SwiftUI
 import Combine
 
+public enum ControlDimensions: CGFloat {
+    case colorSwatchIOS = 45
+    case colorSwatchMacOS = 30
+    case tableMaxWidth = 400
+    case fontSize = 14
+    
+}
+
 public struct ControlsTable<Content: View> : View {
     let component: () -> Content
 
@@ -21,7 +29,7 @@ public struct ControlsTable<Content: View> : View {
                 HStack {
                     self.component()
                 }
-            }.frame(maxWidth: 400)
+            }.frame(maxWidth: ControlDimensions.tableMaxWidth.rawValue)
         }.fixedSize()
     }
 }
@@ -48,13 +56,13 @@ public struct ControlColor: View {
             #if os(iOS)
             if #available(iOS 14.0, *) {
                 ColorPicker("", selection: $color)
-                    .frame(width: 45, height: 40)
+                    .frame(width: ControlDimensions.colorSwatchIOS.rawValue, height: ControlDimensions.colorSwatchIOS.rawValue)
                     .padding()
             }
             #else
         
             Circle()
-                .frame(width: 30, height: 30, alignment: .center)
+                .frame(width: ControlDimensions.colorSwatchMacOS.rawValue, height: ControlDimensions.colorSwatchMacOS.rawValue, alignment: .center)
                 .foregroundColor(color)
                 .padding()
                 .onTapGesture {
@@ -66,7 +74,7 @@ public struct ControlColor: View {
             
             Spacer()
             Text(title)
-                .font(.system(size: 14))
+                .font(.system(size: ControlDimensions.fontSize.rawValue))
             
         }
     }
@@ -89,7 +97,7 @@ public struct ControlToggle: View {
             .padding()
             Spacer()
             Text(title)
-                .font(.system(size: 14))
+                .font(.system(size: ControlDimensions.fontSize.rawValue))
         }
  
     }
@@ -109,7 +117,7 @@ public struct ControlText: View {
             TextField(text, text: $text)
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .frame(maxWidth: 400)
+                .frame(maxWidth: ControlDimensions.tableMaxWidth.rawValue)
                 .fixedSize()
             Spacer()
             Text(label)
@@ -134,7 +142,7 @@ public struct ControlInt: View {
             TextField(String(value), text: $text)
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .frame(maxWidth: 400)
+                .frame(maxWidth: ControlDimensions.tableMaxWidth.rawValue)
                 .fixedSize()
                 .onReceive(Just(text), perform: { newValue in
                     self.text = newValue.filter { $0.isNumber }
@@ -165,7 +173,7 @@ public struct ControlDouble: View {
             TextField(String(value), text: $text)
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .frame(maxWidth: 400)
+                .frame(maxWidth: ControlDimensions.tableMaxWidth.rawValue)
                 .fixedSize()
                 .onReceive(Just(text), perform: { newValue in
                     self.text = newValue.filter { $0.isNumber || $0 == "." }
